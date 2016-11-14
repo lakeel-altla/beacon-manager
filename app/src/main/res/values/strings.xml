@@ -1,0 +1,92 @@
+<resources>
+    <string name="app_name">Beacon Manager</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="title_beacon_settings">Beacon Settings</string>
+    <string name="title_beacon_edit">Beacon Edit</string>
+    <string name="title_beacon_register">Register Beacon</string>
+    <string name="title_registered">Registered</string>
+    <string name="title_nearby_beacons">Nearby Beacons</string>
+    <string name="title_switch_project">Switch Project</string>
+    <string name="title_unregistered">Unregistered</string>
+    <string name="title_sign_in">Sign In</string>
+    <string name="title_sign_out">Sign Out</string>
+    <string name="title_beacon_scan">Nearby Beacons</string>
+
+    <string name="menu_title_save">Save</string>
+
+    <string name="textView_id">ID</string>
+    <string name="textView_type">Type</string>
+    <string name="textView_current_project">Current Project:</string>
+    <string name="textView_project_id">Project ID:</string>
+    <string name="textView_serving_visibility">Visibility</string>
+    <string name="textView_status">Status</string>
+    <string name="textView_description">Description</string>
+    <string name="textView_place_id">Place ID</string>
+    <string name="textView_stability">Expected Stability</string>
+    <string name="textView_floor_level">Floor Level</string>
+    <string name="textView_properties">Properties</string>
+    <string name="textView_properties_name">Name:</string>
+    <string name="textView_properties_value">Value:</string>
+    <string name="textView_attachments">Attachments</string>
+    <string name="textView_attachment_type">Type:</string>
+    <string name="textView_attachment_data">Data:</string>
+    <string name="textView_name">Name</string>
+    <string name="textView_value">Value</string>
+    <string name="textView_data">Data</string>
+
+    <string name="dialog_title_description">Description</string>
+    <string name="dialog_title_floor_level">Floor Level</string>
+    <string name="dialog_title_stability">Stability</string>
+    <string name="dialog_title_property">Property</string>
+    <string name="dialog_title_attachment">Attachment</string>
+
+    <string name="dialog_ok">OK</string>
+
+    <string name="array_item_stable">Stable</string>
+    <string name="array_item_portable">Portable</string>
+    <string name="array_item_mobile">Mobile</string>
+    <string name="array_item_roving">Roving</string>
+
+    <string name="button_sign_in">Sign In</string>
+    <string name="button_scan">Scan</string>
+    <string name="button_activate">Activate</string>
+    <string name="button_deactivate">Deactivate</string>
+    <string name="button_decommission">Decommission</string>
+
+    <string name="message_progress_saving">Saving…</string>
+
+    <string name="message_pick_account">Please pick an account.</string>
+    <string name="message_try_again">Please try again.</string>
+    <string name="message_registered">Registered.</string>
+    <string name="message_not_found">Not found.</string>
+    <string name="message_beacon_register">Please register a beacon.</string>
+    <string name="message_beacon_activate">The beacon is active and works correctly.</string>
+    <string name="message_beacon_deactivate">The beacon is temporarily not visible to apps.</string>
+    <string name="message_beacon_decommissioned">Beacon is permanently decommissioned.</string>
+
+    <string name="hint_description">Description</string>
+    <string name="hint_floor_level">Floor Level</string>
+
+    <string name="error_google_play_service_unavailable">Google play service is unavailable.
+    </string>
+    <string name="error_process">Could not process.</string>
+    <string name="error_sign_in">Could not authenticate to google.</string>
+    <string name="error_sign_out">Could not sign out.</string>
+    <string name="error_ble_disable">Bluetooth is disable.</string>
+    <string name="error_scan_beacons">Could not scan beacons.</string>
+    <string name="error_register">Could not register.</string>
+    <string name="error_already_registered">Already registered.</string>
+    <string name="error_find">Could not find.</string>
+    <string name="error_add">Could not add.</string>
+    <string name="error_update">Could not update.</string>
+    <string name="error_remove">Could not remove.</string>
+    <string name="error_find_current_project_id">Could not find current project ID.</string>
+    <string name="error_google_play_services_unavailable">Google play services is unavailable.
+    </string>
+
+</resources>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/property_table_row">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingEnd="16dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp">
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="40dp"
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical">
+
+                <TextView
+                        android:gravity="end"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/textView_properties_name"/>
+
+                <TextView
+                        android:id="@+id/property_name_value"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="0dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="40dp"
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical">
+
+                <TextView
+                        android:gravity="end"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/textView_properties_value"/>
+
+                <TextView
+                        android:id="@+id/property_value_value"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="0dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+                android:id="@+id/imageView_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/ic_clear"/>
+
+    </LinearLayout>
+</TableRow>

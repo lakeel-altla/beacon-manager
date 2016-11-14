@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="stability">
+        <item>@string/array_item_stable</item>
+        <item>@string/array_item_portable</item>
+        <item>@string/array_item_mobile</item>
+        <item>@string/array_item_roving</item>
+    </string-array>
+</resources>
