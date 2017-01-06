@@ -1,7 +1,7 @@
 package com.altla.vision.beacon.manager.data.entity.mapper;
 
-import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
 import com.altla.vision.beacon.manager.data.entity.BeaconEntity;
+import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
 
 import static com.altla.vision.beacon.manager.data.entity.BeaconEntity.AdvertisedId;
 import static com.altla.vision.beacon.manager.data.entity.BeaconEntity.IndoorLevel;
@@ -12,7 +12,8 @@ public final class BeaconEntityMapper {
     public BeaconEntity map(BeaconModel model) {
         BeaconEntity entity = new BeaconEntity();
 
-        // 注意:登録時に mBeaconName は設定してはならない。
+        // NOTE:
+        // Not set beacon name when register a beacon.
 
         AdvertisedId advertisedId = new AdvertisedId();
         advertisedId.type = model.mType;
