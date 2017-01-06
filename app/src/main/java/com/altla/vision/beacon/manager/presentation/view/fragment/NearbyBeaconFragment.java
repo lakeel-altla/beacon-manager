@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.altla.vision.beacon.manager.R;
-import com.altla.vision.beacon.manager.android.SnackBarUtils;
 import com.altla.vision.beacon.manager.presentation.presenter.NearbyBeaconPresenter;
 import com.altla.vision.beacon.manager.presentation.view.NearbyBeaconView;
 import com.altla.vision.beacon.manager.presentation.view.activity.MainActivity;
@@ -154,7 +154,7 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
 
     @Override
     public void showSnackBar(int resId) {
-        SnackBarUtils.showShort(mRecyclerView, resId);
+        Snackbar.make(mRecyclerView, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

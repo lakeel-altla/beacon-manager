@@ -1,38 +1,12 @@
 package com.altla.vision.beacon.manager.presentation.view.fragment;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.altla.vision.beacon.manager.R;
-import com.altla.vision.beacon.manager.android.SnackBarUtils;
-import com.altla.vision.beacon.manager.presentation.BundleKey;
-import com.altla.vision.beacon.manager.presentation.presenter.BeaconRegisterPresenter;
-import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
-import com.altla.vision.beacon.manager.presentation.view.BeaconRegisterView;
-import com.altla.vision.beacon.manager.presentation.view.activity.MainActivity;
-import com.altla.vision.beacon.manager.presentation.view.layout.DescriptionLayout;
-import com.altla.vision.beacon.manager.presentation.view.layout.FloorLevelLayout;
-import com.altla.vision.beacon.manager.presentation.view.layout.IdLayout;
-import com.altla.vision.beacon.manager.presentation.view.layout.PlaceIdLayout;
-import com.altla.vision.beacon.manager.presentation.view.layout.PropertyHeaderLayout;
-import com.altla.vision.beacon.manager.presentation.view.layout.StabilityLayout;
-import com.altla.vision.beacon.manager.presentation.view.layout.StatusLayout;
-import com.altla.vision.beacon.manager.presentation.view.layout.TypeLayout;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -46,6 +20,31 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.altla.vision.beacon.manager.R;
+import com.altla.vision.beacon.manager.presentation.BundleKey;
+import com.altla.vision.beacon.manager.presentation.presenter.BeaconRegisterPresenter;
+import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
+import com.altla.vision.beacon.manager.presentation.view.BeaconRegisterView;
+import com.altla.vision.beacon.manager.presentation.view.activity.MainActivity;
+import com.altla.vision.beacon.manager.presentation.view.layout.DescriptionLayout;
+import com.altla.vision.beacon.manager.presentation.view.layout.FloorLevelLayout;
+import com.altla.vision.beacon.manager.presentation.view.layout.IdLayout;
+import com.altla.vision.beacon.manager.presentation.view.layout.PlaceIdLayout;
+import com.altla.vision.beacon.manager.presentation.view.layout.PropertyHeaderLayout;
+import com.altla.vision.beacon.manager.presentation.view.layout.StabilityLayout;
+import com.altla.vision.beacon.manager.presentation.view.layout.StatusLayout;
+import com.altla.vision.beacon.manager.presentation.view.layout.TypeLayout;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -224,7 +223,7 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
             } else {
                 if (Activity.RESULT_CANCELED != resultCode) {
                     LOGGER.error("Failed to select a location");
-                    SnackBarUtils.showShort(mLinearLayout, R.string.error_process);
+                    Snackbar.make(mLinearLayout, R.string.error_process, Snackbar.LENGTH_SHORT).show();
                 }
             }
         }
@@ -257,7 +256,7 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
 
     @Override
     public void showSnackBar(int resId) {
-        SnackBarUtils.showShort(mLinearLayout, resId);
+        Snackbar.make(mLinearLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -326,7 +325,7 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
         } catch (GooglePlayServicesNotAvailableException e) {
             LOGGER.error("Google play services not availability", e);
             if (ConnectionResult.SUCCESS != e.errorCode) {
-                SnackBarUtils.showShort(mLinearLayout, R.string.error_google_play_services_unavailable);
+                Snackbar.make(mLinearLayout, R.string.error_google_play_services_unavailable, Snackbar.LENGTH_SHORT).show();
             }
         }
     }

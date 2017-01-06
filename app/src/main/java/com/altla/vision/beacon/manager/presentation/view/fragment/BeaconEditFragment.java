@@ -1,15 +1,25 @@
 package com.altla.vision.beacon.manager.presentation.view.fragment;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.text.InputType;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.altla.vision.beacon.manager.R;
-import com.altla.vision.beacon.manager.android.SnackBarUtils;
 import com.altla.vision.beacon.manager.core.CollectionUtils;
 import com.altla.vision.beacon.manager.presentation.BeaconStatus;
 import com.altla.vision.beacon.manager.presentation.BundleKey;
@@ -27,28 +37,15 @@ import com.altla.vision.beacon.manager.presentation.view.layout.PropertyHeaderLa
 import com.altla.vision.beacon.manager.presentation.view.layout.StabilityLayout;
 import com.altla.vision.beacon.manager.presentation.view.layout.StatusLayout;
 import com.altla.vision.beacon.manager.presentation.view.layout.TypeLayout;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
@@ -275,7 +272,7 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
             } else {
                 if (Activity.RESULT_CANCELED != resultCode) {
                     LOGGER.error("Failed to select a location");
-                    SnackBarUtils.showShort(mLinearLayout, R.string.error_process);
+                    Snackbar.make(mLinearLayout, R.string.error_process, Snackbar.LENGTH_SHORT).show();
                 }
             }
         }
@@ -288,7 +285,7 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
 
     @Override
     public void showSnackBar(int resId) {
-        SnackBarUtils.showLong(mLinearLayout, resId);
+        Snackbar.make(mLinearLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -397,7 +394,7 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
         } catch (GooglePlayServicesNotAvailableException e) {
             LOGGER.error("Google play services not availability", e);
             if (ConnectionResult.SUCCESS != e.errorCode) {
-                SnackBarUtils.showShort(mLinearLayout, R.string.error_google_play_services_unavailable);
+                Snackbar.make(mLinearLayout, R.string.error_google_play_services_unavailable, Snackbar.LENGTH_SHORT).show();
             }
         }
     }

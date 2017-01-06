@@ -1,13 +1,7 @@
 package com.altla.vision.beacon.manager.presentation.view.fragment;
 
-import com.altla.vision.beacon.manager.R;
-import com.altla.vision.beacon.manager.android.SnackBarUtils;
-import com.altla.vision.beacon.manager.presentation.presenter.ProjectSwitchPresenter;
-import com.altla.vision.beacon.manager.presentation.view.SwitchProjectView;
-import com.altla.vision.beacon.manager.presentation.view.activity.MainActivity;
-import com.altla.vision.beacon.manager.presentation.view.adapter.ProjectSwitchAdapter;
-
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.altla.vision.beacon.manager.R;
+import com.altla.vision.beacon.manager.presentation.presenter.ProjectSwitchPresenter;
+import com.altla.vision.beacon.manager.presentation.view.SwitchProjectView;
+import com.altla.vision.beacon.manager.presentation.view.activity.MainActivity;
+import com.altla.vision.beacon.manager.presentation.view.adapter.ProjectSwitchAdapter;
 
 import javax.inject.Inject;
 
@@ -93,7 +93,7 @@ public final class ProjectSwitchFragment extends Fragment implements SwitchProje
 
     @Override
     public void showSnackBar(int resId) {
-        SnackBarUtils.showLong(mLinearLayout, resId);
+        Snackbar.make(mLinearLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

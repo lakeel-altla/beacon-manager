@@ -1,27 +1,26 @@
 package com.altla.vision.beacon.manager.presentation.view.fragment;
 
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.common.AccountPicker;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
-import com.altla.vision.beacon.manager.R;
-import com.altla.vision.beacon.manager.android.SnackBarUtils;
-import com.altla.vision.beacon.manager.presentation.presenter.SignInPresenter;
-import com.altla.vision.beacon.manager.presentation.view.SignInView;
-import com.altla.vision.beacon.manager.presentation.view.activity.MainActivity;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
+import com.altla.vision.beacon.manager.R;
+import com.altla.vision.beacon.manager.presentation.presenter.SignInPresenter;
+import com.altla.vision.beacon.manager.presentation.view.SignInView;
+import com.altla.vision.beacon.manager.presentation.view.activity.MainActivity;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.AccountPicker;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -89,7 +88,7 @@ public class SignInFragment extends Fragment implements SignInView {
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     mSignInPresenter.onPikedUpAccount(getActivity(), accountName);
                 } else if (resultCode == Activity.RESULT_CANCELED) {
-                    SnackBarUtils.showShort(mRelativeLayout, R.string.message_pick_account);
+                    Snackbar.make(mRelativeLayout, R.string.message_pick_account, Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             case REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR:
@@ -97,7 +96,7 @@ public class SignInFragment extends Fragment implements SignInView {
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     mSignInPresenter.onPikedUpAccount(getActivity(), accountName);
                 } else if (resultCode == Activity.RESULT_CANCELED) {
-                    SnackBarUtils.showShort(mRelativeLayout, R.string.message_pick_account);
+                    Snackbar.make(mRelativeLayout, R.string.message_pick_account, Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -123,7 +122,7 @@ public class SignInFragment extends Fragment implements SignInView {
     public void showGooglePlayErrorDialog(int statusCode) {
         GooglePlayServicesUtil.showErrorDialogFragment(statusCode, getActivity(), SignInFragment.this, REQUEST_CODE_GOOGLE_PLAY_SERVICES_ERROR,
                 dialogInterface -> {
-                    SnackBarUtils.showShort(mRelativeLayout, R.string.error_google_play_service_unavailable);
+                    Snackbar.make(mRelativeLayout, R.string.error_google_play_service_unavailable, Snackbar.LENGTH_SHORT).show();
                     dialogInterface.dismiss();
                 });
     }
@@ -142,6 +141,6 @@ public class SignInFragment extends Fragment implements SignInView {
 
     @Override
     public void showSnackBar(int resId) {
-        SnackBarUtils.showShort(mRelativeLayout, resId);
+        Snackbar.make(mRelativeLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 }
