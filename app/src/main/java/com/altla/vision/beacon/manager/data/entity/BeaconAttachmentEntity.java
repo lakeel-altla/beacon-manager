@@ -7,6 +7,4 @@ public final class BeaconAttachmentEntity {
     public String namespacedType;
 
     public String data;
-
-    public String creationTimeMs;
 }
