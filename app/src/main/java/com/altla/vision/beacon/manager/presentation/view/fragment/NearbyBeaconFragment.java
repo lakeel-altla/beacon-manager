@@ -1,7 +1,23 @@
 package com.altla.vision.beacon.manager.presentation.view.fragment;
 
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.altla.vision.beacon.manager.R;
-import com.altla.vision.beacon.manager.android.PermissionUtils;
 import com.altla.vision.beacon.manager.android.SnackBarUtils;
 import com.altla.vision.beacon.manager.presentation.presenter.NearbyBeaconPresenter;
 import com.altla.vision.beacon.manager.presentation.view.NearbyBeaconView;
@@ -11,19 +27,6 @@ import com.altla.vision.beacon.manager.presentation.view.divider.DividerItemDeco
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
@@ -66,6 +69,7 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -74,7 +78,6 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
 
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(true);
-
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
@@ -89,13 +92,9 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
         NearbyBeaconAdapter nearbyBeaconAdapter = new NearbyBeaconAdapter(mNearbyBeaconPresenter);
         mRecyclerView.setAdapter(nearbyBeaconAdapter);
 
-        //
-        // Android 5 系までは、BeaconType のみ利用する場合に android.permission.ACCESS_FINE_LOCATION が許可されていれば
-        // オプトインのダイアログは表示されない。
-        // Android 6 系では、android.permission.ACCESS_FINE_LOCATION の許可を得る必要がある。
-        //
-        if (PermissionUtils.checkFineLocation(getActivity()) != PackageManager.PERMISSION_GRANTED) {
-            PermissionUtils.requestAccessFineLocationPermissions(getActivity(), REQUEST_CODE_ACCESS_FINE_LOCATION);
+        int permissionResult = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionResult != PackageManager.PERMISSION_GRANTED) {
+            activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ACCESS_FINE_LOCATION);
         }
     }
 
