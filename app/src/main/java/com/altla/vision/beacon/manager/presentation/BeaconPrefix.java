@@ -4,13 +4,13 @@ public enum BeaconPrefix {
 
     IBEACON("beacons/1!"), EDDYSTONE_UID("beacons/3!"), EDDYSTONE_EID("beacons/4!"), ALTBEACON("beacons/5!");
 
-    private String mValue;
+    private String value;
 
     BeaconPrefix(String value) {
-        mValue = value;
+        this.value = value;
     }
 
     public String getValue() {
-        return mValue;
+        return value;
     }
 }

@@ -4,11 +4,11 @@ import com.altla.vision.beacon.manager.presentation.BeaconType;
 
 public final class NearbyBeaconModel {
 
-    public String mHexId;
+    public String hexId;
 
-    public String mBase64EncodedId;
+    public String base64EncodedId;
 
-    public BeaconType mType;
+    public BeaconType type;
 
-    public int mRssi;
+    public int rssi;
 }

@@ -1,22 +1,21 @@
 package com.altla.vision.beacon.manager.presentation.presenter;
 
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
-import com.google.android.gms.auth.UserRecoverableAuthException;
+import android.accounts.Account;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 
 import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.domain.usecase.SaveAccountNameUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.SaveTokenUseCase;
 import com.altla.vision.beacon.manager.presentation.view.SignInView;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.accounts.Account;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 
 import java.io.IOException;
 
@@ -35,10 +34,10 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     private static final String AUTH_SCOPE = "oauth2:https://www.googleapis.com/auth/userlocation.beacon.registry";
 
     @Inject
-    SaveAccountNameUseCase mSaveAccountNameUseCase;
+    SaveAccountNameUseCase saveAccountNameUseCase;
 
     @Inject
-    SaveTokenUseCase mSaveTokenUseCase;
+    SaveTokenUseCase saveTokenUseCase;
 
     @Inject
     public SignInPresenter() {
@@ -50,9 +49,6 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     }
 
     public void onPikedUpAccount(Activity activity, String accountName) {
-        //
-        // OAuth2.0 の認証は Activity のインスタンスが必要であるため、Presenter で対応する。
-        //
         Subscription subscription = authenticate(activity.getApplicationContext(), accountName)
                 .flatMap(this::saveToken)
                 .flatMap(s -> saveAccountName(accountName))
@@ -60,7 +56,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> getView().showBeaconScanFragment(),
                         e -> {
-                            // ここで認証の判定を行う。
+                            // Check authorized result.
                             if (e instanceof UserRecoverableAuthException) {
                                 if (e instanceof GooglePlayServicesAvailabilityException) {
                                     int statusCode = ((GooglePlayServicesAvailabilityException) e).getConnectionStatusCode();
@@ -94,10 +90,10 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     }
 
     Single<String> saveAccountName(String accountName) {
-        return mSaveAccountNameUseCase.execute(accountName).subscribeOn(Schedulers.io());
+        return saveAccountNameUseCase.execute(accountName).subscribeOn(Schedulers.io());
     }
 
     Single<String> saveToken(String token) {
-        return mSaveTokenUseCase.execute(token).subscribeOn(Schedulers.io());
+        return saveTokenUseCase.execute(token).subscribeOn(Schedulers.io());
     }
 }

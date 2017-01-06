@@ -2,11 +2,11 @@ package com.altla.vision.beacon.manager.presentation.presenter.model;
 
 public final class AttachmentModel {
 
-    public String mAttachmentName;
+    public String attachmentName;
 
-    public String mNamespace;
+    public String namespace;
 
-    public String mType;
+    public String type;
 
-    public String mData;
+    public String data;
 }

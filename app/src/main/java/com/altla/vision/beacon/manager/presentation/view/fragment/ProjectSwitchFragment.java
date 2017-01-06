@@ -25,16 +25,16 @@ import butterknife.ButterKnife;
 public final class ProjectSwitchFragment extends Fragment implements SwitchProjectView {
 
     @Inject
-    ProjectSwitchPresenter mProjectSwitchPresenter;
+    ProjectSwitchPresenter projectSwitchPresenter;
 
     @BindView(R.id.layout)
-    LinearLayout mLinearLayout;
+    LinearLayout linearLayout;
 
     @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
+    RecyclerView recyclerView;
 
     @BindView(R.id.textView_current_project)
-    TextView mTextView;
+    TextView textView;
 
     public static ProjectSwitchFragment newInstance() {
         return new ProjectSwitchFragment();
@@ -50,7 +50,7 @@ public final class ProjectSwitchFragment extends Fragment implements SwitchProje
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mProjectSwitchPresenter.onCreateView(this);
+        projectSwitchPresenter.onCreateView(this);
 
         return view;
     }
@@ -62,23 +62,23 @@ public final class ProjectSwitchFragment extends Fragment implements SwitchProje
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(true);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
 
-        ProjectSwitchAdapter adapter = new ProjectSwitchAdapter(mProjectSwitchPresenter);
-        mRecyclerView.setAdapter(adapter);
+        ProjectSwitchAdapter adapter = new ProjectSwitchAdapter(projectSwitchPresenter);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mProjectSwitchPresenter.onResume();
+        projectSwitchPresenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mProjectSwitchPresenter.onStop();
+        projectSwitchPresenter.onStop();
     }
 
     @Override
@@ -93,16 +93,16 @@ public final class ProjectSwitchFragment extends Fragment implements SwitchProje
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mLinearLayout, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(linearLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void showCurrentProject(String projectId) {
-        mTextView.setText(projectId);
+        textView.setText(projectId);
     }
 
     @Override
     public void updateItems() {
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 }

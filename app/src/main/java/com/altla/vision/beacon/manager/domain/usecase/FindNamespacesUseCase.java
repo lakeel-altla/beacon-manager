@@ -12,16 +12,16 @@ import rx.schedulers.Schedulers;
 public final class FindNamespacesUseCase {
 
     @Inject
-    PreferenceRepository mPreferenceRepository;
+    PreferenceRepository preferenceRepository;
 
     @Inject
-    BeaconRepository mBeaconRepository;
+    BeaconRepository beaconRepository;
 
     @Inject
     public FindNamespacesUseCase() {
     }
 
     public Single<NamespacesEntity> execute() {
-        return mBeaconRepository.findNamespaces().subscribeOn(Schedulers.io());
+        return beaconRepository.findNamespaces().subscribeOn(Schedulers.io());
     }
 }

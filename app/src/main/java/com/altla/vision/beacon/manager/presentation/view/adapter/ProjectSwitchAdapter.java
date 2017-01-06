@@ -1,10 +1,5 @@
 package com.altla.vision.beacon.manager.presentation.view.adapter;
 
-import com.altla.vision.beacon.manager.R;
-import com.altla.vision.beacon.manager.presentation.presenter.ProjectSwitchPresenter;
-import com.altla.vision.beacon.manager.presentation.presenter.model.NameSpaceModel;
-import com.altla.vision.beacon.manager.presentation.view.ProjectSwitchItemView;
-
 import android.support.annotation.IntRange;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,22 +8,27 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.altla.vision.beacon.manager.R;
+import com.altla.vision.beacon.manager.presentation.presenter.ProjectSwitchPresenter;
+import com.altla.vision.beacon.manager.presentation.presenter.model.NameSpaceModel;
+import com.altla.vision.beacon.manager.presentation.view.ProjectSwitchItemView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public final class ProjectSwitchAdapter extends RecyclerView.Adapter<ProjectSwitchAdapter.ProjectSwitchViewHolder> {
 
-    private ProjectSwitchPresenter mProjectSwitchPresenter;
+    private ProjectSwitchPresenter projectSwitchPresenter;
 
     public ProjectSwitchAdapter(ProjectSwitchPresenter projectSwitchPresenter) {
-        mProjectSwitchPresenter = projectSwitchPresenter;
+        this.projectSwitchPresenter = projectSwitchPresenter;
     }
 
     @Override
     public ProjectSwitchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.namespace_item, parent, false);
         ProjectSwitchViewHolder projectSwitchViewHolder = new ProjectSwitchViewHolder(itemView);
-        mProjectSwitchPresenter.onCreateItemView(projectSwitchViewHolder);
+        projectSwitchPresenter.onCreateItemView(projectSwitchViewHolder);
         return projectSwitchViewHolder;
     }
 
@@ -39,20 +39,20 @@ public final class ProjectSwitchAdapter extends RecyclerView.Adapter<ProjectSwit
 
     @Override
     public int getItemCount() {
-        return mProjectSwitchPresenter.getItemCount();
+        return projectSwitchPresenter.getItemCount();
     }
 
-    public final class ProjectSwitchViewHolder extends RecyclerView.ViewHolder implements ProjectSwitchItemView {
+    final class ProjectSwitchViewHolder extends RecyclerView.ViewHolder implements ProjectSwitchItemView {
 
         @BindView(R.id.layout_row)
-        LinearLayout mLinearLayout;
+        LinearLayout linearLayout;
 
         @BindView(R.id.textView_project_id)
-        TextView mProjectId;
+        TextView projectId;
 
         private ProjectSwitchPresenter.ProjectSwitchItemPresenter mItemPresenter;
 
-        public ProjectSwitchViewHolder(View itemView) {
+        ProjectSwitchViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -64,8 +64,8 @@ public final class ProjectSwitchAdapter extends RecyclerView.Adapter<ProjectSwit
 
         @Override
         public void showItem(NameSpaceModel model) {
-            mProjectId.setText(model.mProjectId);
-            mLinearLayout.setOnClickListener(view -> mItemPresenter.onItemClick(model));
+            projectId.setText(model.projectId);
+            linearLayout.setOnClickListener(view -> mItemPresenter.onItemClick(model));
         }
 
         @Override

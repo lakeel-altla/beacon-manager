@@ -16,29 +16,29 @@ public final class BeaconEntityMapper {
         // Not set beacon name when register a beacon.
 
         AdvertisedId advertisedId = new AdvertisedId();
-        advertisedId.type = model.mType;
-        advertisedId.id = model.mBase64EncodedId;
+        advertisedId.type = model.type;
+        advertisedId.id = model.base64EncodedId;
 
         entity.advertisedId = advertisedId;
-        entity.status = model.mStatus;
-        entity.placeId = model.mPlaceId;
+        entity.status = model.status;
+        entity.placeId = model.placeId;
 
-        if (model.mLatLng != null) {
+        if (model.latLng != null) {
             LatLng latLng = new LatLng();
-            latLng.latitude = model.mLatLng.latitude;
-            latLng.longitude = model.mLatLng.longitude;
+            latLng.latitude = model.latLng.latitude;
+            latLng.longitude = model.latLng.longitude;
             entity.latLng = latLng;
         }
 
         IndoorLevel indoorLevel = new IndoorLevel();
-        indoorLevel.name = model.mFloorLevel;
+        indoorLevel.name = model.floorLevel;
         entity.indoorLevel = indoorLevel;
 
-        entity.expectedStability = model.mStability;
-        entity.description = model.mDescription;
+        entity.expectedStability = model.stability;
+        entity.description = model.description;
 
-        if (model.mProperties != null) {
-            entity.properties = model.mProperties;
+        if (model.properties != null) {
+            entity.properties = model.properties;
         }
 
         return entity;

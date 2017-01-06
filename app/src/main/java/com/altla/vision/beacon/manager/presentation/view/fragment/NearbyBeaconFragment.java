@@ -36,13 +36,13 @@ import butterknife.ButterKnife;
 public final class NearbyBeaconFragment extends Fragment implements NearbyBeaconView {
 
     @Inject
-    NearbyBeaconPresenter mNearbyBeaconPresenter;
+    NearbyBeaconPresenter nearbyBeaconPresenter;
 
     @BindView(R.id.layout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
+    RecyclerView recyclerView;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NearbyBeaconFragment.class);
 
@@ -50,7 +50,6 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
 
     private static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 2;
 
-    // デフォルトコンストラクタは残しておかなければならない。
     public static NearbyBeaconFragment newInstance() {
         return new NearbyBeaconFragment();
     }
@@ -64,7 +63,7 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mNearbyBeaconPresenter.onCreateView(this);
+        nearbyBeaconPresenter.onCreateView(this);
 
         return view;
     }
@@ -74,23 +73,23 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mNearbyBeaconPresenter.checkBleEnabled(getActivity());
+        nearbyBeaconPresenter.checkBleEnabled(getActivity());
 
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(true);
 
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            new Handler().postDelayed(() -> mSwipeRefreshLayout.setRefreshing(false), 500);
-            mNearbyBeaconPresenter.onRefresh();
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 500);
+            nearbyBeaconPresenter.onRefresh();
         });
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        NearbyBeaconAdapter nearbyBeaconAdapter = new NearbyBeaconAdapter(mNearbyBeaconPresenter);
-        mRecyclerView.setAdapter(nearbyBeaconAdapter);
+        NearbyBeaconAdapter nearbyBeaconAdapter = new NearbyBeaconAdapter(nearbyBeaconPresenter);
+        recyclerView.setAdapter(nearbyBeaconAdapter);
 
         int permissionResult = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION);
         if (permissionResult != PackageManager.PERMISSION_GRANTED) {
@@ -101,13 +100,13 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
     @Override
     public void onResume() {
         super.onResume();
-        mNearbyBeaconPresenter.onResume();
+        nearbyBeaconPresenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mNearbyBeaconPresenter.onStop();
+        nearbyBeaconPresenter.onStop();
     }
 
     @Override
@@ -116,7 +115,7 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
 
         switch (requestCode) {
             case REQUEST_CODE_ENABLE_BLE:
-                mNearbyBeaconPresenter.setBeaconManager();
+                nearbyBeaconPresenter.setBeaconManager();
                 break;
             default:
                 break;
@@ -125,7 +124,7 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        // TODO: Android 6 系の Permission 対応。
+        // TODO: Android 6 Permission
         if (requestCode != REQUEST_CODE_ACCESS_FINE_LOCATION) {
             LOGGER.warn("Permission denied");
         }
@@ -144,17 +143,17 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
 
     @Override
     public void updateItems() {
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void removeAllItems(int size) {
-        mRecyclerView.getAdapter().notifyItemRangeRemoved(0, size);
+        recyclerView.getAdapter().notifyItemRangeRemoved(0, size);
     }
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mRecyclerView, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(recyclerView, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

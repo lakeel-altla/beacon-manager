@@ -11,13 +11,13 @@ import rx.schedulers.Schedulers;
 public final class FindBeaconsUseCase {
 
     @Inject
-    BeaconRepository mBeaconRepository;
+    BeaconRepository beaconRepository;
 
     @Inject
     public FindBeaconsUseCase() {
     }
 
     public Single<BeaconsEntity> execute(String pageToken) {
-        return mBeaconRepository.findBeaconsByPageToken(pageToken).subscribeOn(Schedulers.io());
+        return beaconRepository.findBeaconsByPageToken(pageToken).subscribeOn(Schedulers.io());
     }
 }

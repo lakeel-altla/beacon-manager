@@ -10,13 +10,13 @@ import rx.schedulers.Schedulers;
 public final class FindAccountNameUseCase {
 
     @Inject
-    PreferenceRepository mPreferenceRepository;
+    PreferenceRepository preferenceRepository;
 
     @Inject
     public FindAccountNameUseCase() {
     }
 
     public Single<String> execute() {
-        return mPreferenceRepository.findAccountName().subscribeOn(Schedulers.io());
+        return preferenceRepository.findAccountName().subscribeOn(Schedulers.io());
     }
 }

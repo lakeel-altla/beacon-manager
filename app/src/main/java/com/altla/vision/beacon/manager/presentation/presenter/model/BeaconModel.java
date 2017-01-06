@@ -7,25 +7,25 @@ import java.util.Map;
 
 public final class BeaconModel {
 
-    public String mBeaconName;
+    public String beaconName;
 
-    public String mType;
+    public String type;
 
-    public String mHexId;
+    public String hexId;
 
-    public String mBase64EncodedId;
+    public String base64EncodedId;
 
-    public String mStatus;
+    public String status;
 
-    public String mDescription;
+    public String description;
 
-    public String mPlaceId;
+    public String placeId;
 
-    public String mFloorLevel;
+    public String floorLevel;
 
-    public String mStability;
+    public String stability;
 
-    public LatLng mLatLng;
+    public LatLng latLng;
 
-    public Map<String, String> mProperties;
+    public Map<String, String> properties;
 }

@@ -11,13 +11,13 @@ import rx.schedulers.Schedulers;
 public final class CreateAttachmentUseCase {
 
     @Inject
-    BeaconRepository mBeaconRepository;
+    BeaconRepository beaconRepository;
 
     @Inject
     public CreateAttachmentUseCase() {
     }
 
     public Single<BeaconAttachmentEntity> execute(String beaconName, String type, String data) {
-        return mBeaconRepository.createAttachment(beaconName, type, data).subscribeOn(Schedulers.io());
+        return beaconRepository.createAttachment(beaconName, type, data).subscribeOn(Schedulers.io());
     }
 }

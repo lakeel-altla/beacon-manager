@@ -16,10 +16,10 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
     private static final String ACCOUNT_NAME_KEY = "accountName";
 
     @Inject
-    SharedPreferences mSharedPreferences;
+    SharedPreferences sharedPreferences;
 
     @Inject
-    EncryptedPreferences mEncryptedPreferences;
+    EncryptedPreferences encryptedPreferences;
 
     @Inject
     public PreferenceRepositoryImpl() {
@@ -27,26 +27,26 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
 
     @Override
     public Single<String> findAccountName() {
-        String accountName = mSharedPreferences.getString(ACCOUNT_NAME_KEY, StringUtils.EMPTY);
+        String accountName = sharedPreferences.getString(ACCOUNT_NAME_KEY, StringUtils.EMPTY);
         return Single.just(accountName);
     }
 
     @Override
     public Single<String> findToken() {
-        String projectId = mEncryptedPreferences.getToken();
+        String projectId = encryptedPreferences.getToken();
         return Single.just(projectId);
     }
 
     @Override
     public Single<String> findProjectId() {
-        String projectId = mEncryptedPreferences.getProjectId();
+        String projectId = encryptedPreferences.getProjectId();
         return Single.just(projectId);
     }
 
     @Override
     public Single<String> saveAccountName(String accountName) {
         return Single.create(subscriber -> {
-            SharedPreferences.Editor editor = mSharedPreferences.edit().putString(ACCOUNT_NAME_KEY, accountName);
+            SharedPreferences.Editor editor = sharedPreferences.edit().putString(ACCOUNT_NAME_KEY, accountName);
             editor.commit();
             subscriber.onSuccess(accountName);
         });
@@ -55,7 +55,7 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
     @Override
     public Completable removeAccountName() {
         return Completable.create(subscriber -> {
-            SharedPreferences.Editor editor = mSharedPreferences.edit().remove(ACCOUNT_NAME_KEY);
+            SharedPreferences.Editor editor = sharedPreferences.edit().remove(ACCOUNT_NAME_KEY);
             editor.apply();
             subscriber.onCompleted();
         });
@@ -66,7 +66,7 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
-                mEncryptedPreferences.saveToken(token);
+                encryptedPreferences.saveToken(token);
                 subscriber.onSuccess(token);
             }
         });
@@ -77,7 +77,7 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
         return Single.create(new Single.OnSubscribe<String>() {
             @Override
             public void call(SingleSubscriber<? super String> subscriber) {
-                mEncryptedPreferences.saveProjectId(projectId);
+                encryptedPreferences.saveProjectId(projectId);
                 subscriber.onSuccess(projectId);
             }
         });
@@ -85,8 +85,8 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
 
     @Override
     public Single<PreferencesEntity> findPreferencesData() {
-        String token = mEncryptedPreferences.getToken();
-        String projectId = mEncryptedPreferences.getProjectId();
+        String token = encryptedPreferences.getToken();
+        String projectId = encryptedPreferences.getProjectId();
         return Single.just(new PreferencesEntity(token, projectId));
     }
 }

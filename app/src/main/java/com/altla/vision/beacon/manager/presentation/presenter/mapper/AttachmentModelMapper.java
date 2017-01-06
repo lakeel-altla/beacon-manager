@@ -17,10 +17,10 @@ public final class AttachmentModelMapper {
         String namespace = nameSpacedType.substring(0, namespacePosition);
         String type = nameSpacedType.substring(namespacePosition + 1, nameSpacedType.length());
 
-        model.mAttachmentName = entity.attachmentName;
-        model.mNamespace = namespace;
-        model.mType = type;
-        model.mData = new String(ByteUtils.toBase64Decoded(entity.data));
+        model.attachmentName = entity.attachmentName;
+        model.namespace = namespace;
+        model.type = type;
+        model.data = new String(ByteUtils.toBase64Decoded(entity.data));
         return model;
     }
 }

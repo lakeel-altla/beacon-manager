@@ -14,44 +14,44 @@ public final class BeaconModelMapper {
     public BeaconModel map(@NonNull BeaconEntity entity) {
         BeaconModel model = new BeaconModel();
 
-        model.mBeaconName = entity.beaconName;
-        model.mType = entity.advertisedId.type;
+        model.beaconName = entity.beaconName;
+        model.type = entity.advertisedId.type;
 
         BeaconName name = BeaconName.toBeaconName(entity.advertisedId.type);
         switch (name) {
             case IBEACON:
-                model.mHexId = entity.beaconName.replace(BeaconPrefix.IBEACON.getValue(), "");
+                model.hexId = entity.beaconName.replace(BeaconPrefix.IBEACON.getValue(), "");
                 break;
             case EDDYSTONE:
-                model.mHexId = entity.beaconName.replace(BeaconPrefix.EDDYSTONE_UID.getValue(), "");
+                model.hexId = entity.beaconName.replace(BeaconPrefix.EDDYSTONE_UID.getValue(), "");
                 break;
             case EDDYSTONE_EID:
-                model.mHexId = entity.beaconName.replace(BeaconPrefix.EDDYSTONE_EID.getValue(), "");
+                model.hexId = entity.beaconName.replace(BeaconPrefix.EDDYSTONE_EID.getValue(), "");
                 break;
             case ALTBEACON:
-                model.mHexId = entity.beaconName.replace(BeaconPrefix.ALTBEACON.getValue(), "");
+                model.hexId = entity.beaconName.replace(BeaconPrefix.ALTBEACON.getValue(), "");
                 break;
             default:
                 break;
         }
 
-        model.mStatus = entity.status;
-        model.mDescription = entity.description;
-        model.mPlaceId = entity.placeId;
+        model.status = entity.status;
+        model.description = entity.description;
+        model.placeId = entity.placeId;
 
         if (entity.indoorLevel != null) {
-            model.mFloorLevel = entity.indoorLevel.name;
+            model.floorLevel = entity.indoorLevel.name;
         }
 
-        model.mStability = entity.expectedStability;
+        model.stability = entity.expectedStability;
 
         if (entity.properties != null) {
-            if (model.mProperties == null) {
-                model.mProperties = new HashMap<>();
-                model.mProperties.putAll(entity.properties);
+            if (model.properties == null) {
+                model.properties = new HashMap<>();
+                model.properties.putAll(entity.properties);
             } else {
-                model.mProperties.clear();
-                model.mProperties.putAll(entity.properties);
+                model.properties.clear();
+                model.properties.putAll(entity.properties);
             }
         }
 

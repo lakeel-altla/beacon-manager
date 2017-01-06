@@ -44,10 +44,10 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ActivityView {
 
     @Inject
-    ActivityPresenter mActivityPresenter;
+    ActivityPresenter activityPresenter;
 
     @BindView(R.id.fragment_place_holder)
-    RelativeLayout mMainLayout;
+    RelativeLayout mainLayout;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainActivity.class);
 
@@ -55,18 +55,18 @@ public class MainActivity extends AppCompatActivity
 
     private static final int REQUEST_CODE_RECOVERABLE_AUTH = 2;
 
-    private ActionBarDrawerToggle mToggle;
+    private ActionBarDrawerToggle toggle;
 
     private DrawerLayout drawerLayout;
 
-    private UserComponent mUserComponent;
+    private UserComponent userComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Dagger。
-        mUserComponent = App.getApplicationComponent(this)
+        userComponent = App.getApplicationComponent(this)
                 .userComponent(new ActivityModule(this));
-        mUserComponent.inject(this);
+        userComponent.inject(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -74,18 +74,18 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mToggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mToggle.syncState();
-        drawerLayout.addDrawerListener(mToggle);
+        toggle.syncState();
+        drawerLayout.addDrawerListener(toggle);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         ButterKnife.bind(this);
 
-        mActivityPresenter.onCreateView(this);
-        mActivityPresenter.checkAuthentication(getApplicationContext());
+        activityPresenter.onCreateView(this);
+        activityPresenter.checkAuthentication(getApplicationContext());
     }
 
     @Override
@@ -96,14 +96,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
-        mActivityPresenter.onStop();
+        activityPresenter.onStop();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_RECOVERABLE_AUTH) {
-            mActivityPresenter.saveToken(getApplicationContext());
+            activityPresenter.saveToken(getApplicationContext());
         }
     }
 
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return mToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        return toggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity
                 new FragmentController(getSupportFragmentManager()).showProjectSwitchFragment();
                 break;
             case R.id.nav_sign_out:
-                mActivityPresenter.onSignOut(MainActivity.this);
+                activityPresenter.onSignOut(MainActivity.this);
                 break;
             default:
                 break;
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mToggle.setDrawerIndicatorEnabled(true);
+        toggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
         FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
@@ -184,11 +184,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mMainLayout, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mainLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     public void setDrawerIndicatorEnabled(boolean enabled) {
-        mToggle.setDrawerIndicatorEnabled(enabled);
+        toggle.setDrawerIndicatorEnabled(enabled);
     }
 
     public void showBeaconRegisterFragment(String type, String hexId, String base64EncodedId) {
@@ -207,11 +207,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void refreshToken() {
-        mActivityPresenter.refreshToken(getApplicationContext());
+        activityPresenter.refreshToken(getApplicationContext());
     }
 
     public static UserComponent getUserComponent(@NonNull Fragment fragment) {
-        return ((MainActivity) fragment.getActivity()).mUserComponent;
+        return ((MainActivity) fragment.getActivity()).userComponent;
     }
 
     private static class FragmentController {

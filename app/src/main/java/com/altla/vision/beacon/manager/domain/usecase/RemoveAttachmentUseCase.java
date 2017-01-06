@@ -10,13 +10,13 @@ import rx.schedulers.Schedulers;
 public final class RemoveAttachmentUseCase {
 
     @Inject
-    BeaconRepository mBeaconRepository;
+    BeaconRepository beaconRepository;
 
     @Inject
     public RemoveAttachmentUseCase() {
     }
 
     public Single<Object> execute(String attachmentName) {
-        return mBeaconRepository.removeAttachment(attachmentName).subscribeOn(Schedulers.io());
+        return beaconRepository.removeAttachment(attachmentName).subscribeOn(Schedulers.io());
     }
 }

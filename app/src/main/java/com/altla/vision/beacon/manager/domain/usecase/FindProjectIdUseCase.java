@@ -10,13 +10,13 @@ import rx.schedulers.Schedulers;
 public final class FindProjectIdUseCase {
 
     @Inject
-    PreferenceRepository mPreferenceRepository;
+    PreferenceRepository preferenceRepository;
 
     @Inject
     public FindProjectIdUseCase() {
     }
 
     public Single<String> execute() {
-        return mPreferenceRepository.findProjectId().subscribeOn(Schedulers.io());
+        return preferenceRepository.findProjectId().subscribeOn(Schedulers.io());
     }
 }

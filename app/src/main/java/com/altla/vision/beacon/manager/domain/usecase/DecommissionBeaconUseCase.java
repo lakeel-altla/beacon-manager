@@ -10,14 +10,14 @@ import rx.schedulers.Schedulers;
 public final class DecommissionBeaconUseCase {
 
     @Inject
-    BeaconRepository mBeaconRepository;
+    BeaconRepository beaconRepository;
 
     @Inject
     public DecommissionBeaconUseCase() {
     }
 
     public Single<Object> execute(String name) {
-        return mBeaconRepository.decommissionBeacon(name).subscribeOn(Schedulers.io());
+        return beaconRepository.decommissionBeacon(name).subscribeOn(Schedulers.io());
     }
 
 }

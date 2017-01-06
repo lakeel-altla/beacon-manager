@@ -12,16 +12,16 @@ import rx.schedulers.Schedulers;
 public final class FindBeaconUseCase {
 
     @Inject
-    PreferenceRepository mPreferenceRepository;
+    PreferenceRepository preferenceRepository;
 
     @Inject
-    BeaconRepository mBeaconRepository;
+    BeaconRepository beaconRepository;
 
     @Inject
     public FindBeaconUseCase() {
     }
 
     public Single<BeaconEntity> execute(String beaconName) {
-        return mBeaconRepository.findBeaconByName(beaconName).subscribeOn(Schedulers.io());
+        return beaconRepository.findBeaconByName(beaconName).subscribeOn(Schedulers.io());
     }
 }

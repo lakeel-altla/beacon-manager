@@ -1,9 +1,5 @@
 package com.altla.vision.beacon.manager.presentation.presenter;
 
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLngBounds;
-
 import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.domain.usecase.CreateAttachmentUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.FindAttachmentsUseCase;
@@ -21,6 +17,9 @@ import com.altla.vision.beacon.manager.presentation.presenter.mapper.BeaconModel
 import com.altla.vision.beacon.manager.presentation.presenter.model.AttachmentModel;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
 import com.altla.vision.beacon.manager.presentation.view.BeaconEditView;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,47 +37,47 @@ import rx.android.schedulers.AndroidSchedulers;
 public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> implements AuthFailure {
 
     @Inject
-    FindBeaconUseCase mFindBeaconUseCase;
+    FindBeaconUseCase findBeaconUseCase;
 
     @Inject
-    UpdateDescriptionUseCase mUpdateDescriptionUseCase;
+    UpdateDescriptionUseCase updateDescriptionUseCase;
 
     @Inject
-    UpdateFloorLevelUseCase mUpdateFloorLevelUseCase;
+    UpdateFloorLevelUseCase updateFloorLevelUseCase;
 
     @Inject
-    UpdateStabilityUseCase mUpdateStabilityUseCase;
+    UpdateStabilityUseCase updateStabilityUseCase;
 
     @Inject
-    UpdatePlaceUseCase mUpdatePlaceUseCase;
+    UpdatePlaceUseCase updatePlaceUseCase;
 
     @Inject
-    UpdatePropertyUseCase mUpdatePropertyUseCase;
+    UpdatePropertyUseCase updatePropertyUseCase;
 
     @Inject
-    UpdatePropertiesUseCase mUpdatePropertiesUseCase;
+    UpdatePropertiesUseCase updatePropertiesUseCase;
 
     @Inject
-    CreateAttachmentUseCase mCreateAttachmentUseCase;
+    CreateAttachmentUseCase createAttachmentUseCase;
 
     @Inject
-    RemoveAttachmentUseCase mRemoveAttachmentUseCase;
+    RemoveAttachmentUseCase removeAttachmentUseCase;
 
     @Inject
-    FindAttachmentsUseCase mFindAttachmentsUseCase;
+    FindAttachmentsUseCase findAttachmentsUseCase;
 
-    private BeaconModel mBeaconModel;
+    private BeaconModel beaconModel;
 
-    private List<AttachmentModel> mAttachmentModels = new ArrayList<>();
+    private List<AttachmentModel> attachmentModels = new ArrayList<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeaconEditPresenter.class);
 
-    private BeaconModelMapper mBeaconModelMapper = new BeaconModelMapper();
+    private BeaconModelMapper beaconModelMapper = new BeaconModelMapper();
 
-    private AttachmentModelMapper mAttachmentModelMapper = new AttachmentModelMapper();
+    private AttachmentModelMapper attachmentModelMapper = new AttachmentModelMapper();
 
     @Inject
-    public BeaconEditPresenter() {
+    BeaconEditPresenter() {
     }
 
     @Override
@@ -88,18 +87,18 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
 
     public void setBeaconModel(String beaconName) {
         BeaconModel model = new BeaconModel();
-        model.mBeaconName = beaconName;
-        mBeaconModel = model;
+        model.beaconName = beaconName;
+        beaconModel = model;
     }
 
     public void findBeacon() {
-        Subscription subscription = mFindBeaconUseCase
-                .execute(mBeaconModel.mBeaconName)
-                .map(beaconEntity -> mBeaconModelMapper.map(beaconEntity))
+        Subscription subscription = findBeaconUseCase
+                .execute(beaconModel.beaconName)
+                .map(beaconEntity -> beaconModelMapper.map(beaconEntity))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    mBeaconModel = model;
-                    getView().updateItem(mBeaconModel);
+                    beaconModel = model;
+                    getView().updateItem(beaconModel);
                 }, new DefaultAuthFailCallback(this) {
 
                     @Override
@@ -110,18 +109,18 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                 });
         mCompositeSubscription.add(subscription);
 
-        Subscription subscription1 = mFindAttachmentsUseCase
-                .execute(mBeaconModel.mBeaconName)
+        Subscription subscription1 = findAttachmentsUseCase
+                .execute(beaconModel.beaconName)
                 .toObservable()
                 .filter(entity -> entity.attachments != null)
                 .flatMap(entity -> Observable.from(entity.attachments))
-                .map(entity -> mAttachmentModelMapper.map(entity))
+                .map(entity -> attachmentModelMapper.map(entity))
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(models -> {
-                    mAttachmentModels.clear();
-                    mAttachmentModels.addAll(models);
-                    getView().updateAttachments(mAttachmentModels, BeaconStatus.toStatus(mBeaconModel.mStatus));
+                    attachmentModels.clear();
+                    attachmentModels.addAll(models);
+                    getView().updateAttachments(attachmentModels, BeaconStatus.toStatus(beaconModel.status));
                 }, new DefaultAuthFailCallback(this) {
 
                     @Override
@@ -134,20 +133,20 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
     }
 
     public void onDescriptionInputted(String value) {
-        Subscription subscription = mUpdateDescriptionUseCase
-                .execute(mBeaconModel.mBeaconName, value)
+        Subscription subscription = updateDescriptionUseCase
+                .execute(beaconModel.beaconName, value)
                 .doOnSubscribe(() -> getView().showProgressDialog())
                 .doOnUnsubscribe(() -> getView().hideProgressDialog())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(entity -> mBeaconModelMapper.map(entity))
+                .map(entity -> beaconModelMapper.map(entity))
                 .subscribe(model -> {
-                    mBeaconModel = model;
-                    getView().updateItem(mBeaconModel);
+                    beaconModel = model;
+                    getView().updateItem(beaconModel);
                 }, new DefaultAuthFailCallback(this) {
 
                     @Override
                     void onError(Throwable e) {
-                        LOGGER.error("Failed to update mDescription", e);
+                        LOGGER.error("Failed to update description", e);
                         getView().showSnackBar(R.string.error_update);
                     }
                 });
@@ -155,15 +154,15 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
     }
 
     public void onFloorLevelInputted(String value) {
-        Subscription subscription = mUpdateFloorLevelUseCase
-                .execute(mBeaconModel.mBeaconName, value)
+        Subscription subscription = updateFloorLevelUseCase
+                .execute(beaconModel.beaconName, value)
                 .doOnSubscribe(() -> getView().showProgressDialog())
                 .doOnUnsubscribe(() -> getView().hideProgressDialog())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(entity -> mBeaconModelMapper.map(entity))
+                .map(entity -> beaconModelMapper.map(entity))
                 .subscribe(model -> {
-                    mBeaconModel = model;
-                    getView().updateItem(mBeaconModel);
+                    beaconModel = model;
+                    getView().updateItem(beaconModel);
                 }, new DefaultAuthFailCallback(this) {
 
                     @Override
@@ -176,15 +175,15 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
     }
 
     public void onStabilityInputted(String value) {
-        Subscription subscription = mUpdateStabilityUseCase
-                .execute(mBeaconModel.mBeaconName, value)
+        Subscription subscription = updateStabilityUseCase
+                .execute(beaconModel.beaconName, value)
                 .doOnSubscribe(() -> getView().showProgressDialog())
                 .doOnUnsubscribe(() -> getView().hideProgressDialog())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(entity -> mBeaconModelMapper.map(entity))
+                .map(entity -> beaconModelMapper.map(entity))
                 .subscribe(model -> {
-                    mBeaconModel = model;
-                    getView().updateItem(mBeaconModel);
+                    beaconModel = model;
+                    getView().updateItem(beaconModel);
                 }, new DefaultAuthFailCallback(this) {
 
                     @Override
@@ -198,22 +197,22 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
 
     public void onPlaceIdClicked() {
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        if (mBeaconModel.mLatLng != null) {
-            builder.setLatLngBounds(new LatLngBounds(mBeaconModel.mLatLng, mBeaconModel.mLatLng));
+        if (beaconModel.latLng != null) {
+            builder.setLatLngBounds(new LatLngBounds(beaconModel.latLng, beaconModel.latLng));
         }
         getView().showPlacePicker(builder);
     }
 
     public void onSelectedPlace(Place place) {
-        Subscription subscription = mUpdatePlaceUseCase
-                .execute(mBeaconModel.mBeaconName, place.getId(), place.getLatLng())
-                .map(entity -> mBeaconModelMapper.map(entity))
+        Subscription subscription = updatePlaceUseCase
+                .execute(beaconModel.beaconName, place.getId(), place.getLatLng())
+                .map(entity -> beaconModelMapper.map(entity))
                 .doOnSubscribe(() -> getView().showProgressDialog())
                 .doOnUnsubscribe(() -> getView().hideProgressDialog())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    mBeaconModel = model;
-                    getView().updateItem(mBeaconModel);
+                    beaconModel = model;
+                    getView().updateItem(beaconModel);
                 }, new DefaultAuthFailCallback(this) {
 
                     @Override
@@ -226,15 +225,15 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
     }
 
     public void onPropertyInputted(String name, String value) {
-        Subscription subscription = mUpdatePropertyUseCase
-                .execute(mBeaconModel.mBeaconName, name, value)
-                .map(entity -> mBeaconModelMapper.map(entity))
+        Subscription subscription = updatePropertyUseCase
+                .execute(beaconModel.beaconName, name, value)
+                .map(entity -> beaconModelMapper.map(entity))
                 .doOnSubscribe(() -> getView().showProgressDialog())
                 .doOnUnsubscribe(() -> getView().hideProgressDialog())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    mBeaconModel = model;
-                    getView().updateItem(mBeaconModel);
+                    beaconModel = model;
+                    getView().updateItem(beaconModel);
                 }, new DefaultAuthFailCallback(this) {
 
                     @Override
@@ -247,18 +246,18 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
     }
 
     public void onPropertyRemoved(String key) {
-        Map<String, String> map = mBeaconModel.mProperties;
+        Map<String, String> map = beaconModel.properties;
         map.remove(key);
 
-        Subscription subscription = mUpdatePropertiesUseCase
-                .execute(mBeaconModel.mBeaconName, map)
-                .map(entity -> mBeaconModelMapper.map(entity))
+        Subscription subscription = updatePropertiesUseCase
+                .execute(beaconModel.beaconName, map)
+                .map(entity -> beaconModelMapper.map(entity))
                 .doOnSubscribe(() -> getView().showProgressDialog())
                 .doOnUnsubscribe(() -> getView().hideProgressDialog())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    mBeaconModel = model;
-                    getView().updateItem(mBeaconModel);
+                    beaconModel = model;
+                    getView().updateItem(beaconModel);
                 }, new DefaultAuthFailCallback(this) {
                     @Override
                     void onError(Throwable e) {
@@ -270,15 +269,15 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
     }
 
     public void onAttachmentInputted(String type, String data) {
-        Subscription subscription = mCreateAttachmentUseCase
-                .execute(mBeaconModel.mBeaconName, type, data)
-                .map(entity -> mAttachmentModelMapper.map(entity))
+        Subscription subscription = createAttachmentUseCase
+                .execute(beaconModel.beaconName, type, data)
+                .map(entity -> attachmentModelMapper.map(entity))
                 .doOnSubscribe(() -> getView().showProgressDialog())
                 .doOnUnsubscribe(() -> getView().hideProgressDialog())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    mAttachmentModels.add(model);
-                    getView().updateAttachments(mAttachmentModels, BeaconStatus.toStatus(mBeaconModel.mStatus));
+                    attachmentModels.add(model);
+                    getView().updateAttachments(attachmentModels, BeaconStatus.toStatus(beaconModel.status));
                 }, new DefaultAuthFailCallback(this) {
 
                     @Override
@@ -291,14 +290,14 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
     }
 
     public void onAttachmentRemoved(AttachmentModel model) {
-        Subscription subscription = mRemoveAttachmentUseCase
-                .execute(model.mAttachmentName)
+        Subscription subscription = removeAttachmentUseCase
+                .execute(model.attachmentName)
                 .doOnSubscribe(() -> getView().showProgressDialog())
                 .doOnUnsubscribe(() -> getView().hideProgressDialog())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> {
-                    mAttachmentModels.remove(model);
-                    getView().updateAttachments(mAttachmentModels, BeaconStatus.toStatus(mBeaconModel.mStatus));
+                    attachmentModels.remove(model);
+                    getView().updateAttachments(attachmentModels, BeaconStatus.toStatus(beaconModel.status));
                 }, new DefaultAuthFailCallback(this) {
 
                     @Override

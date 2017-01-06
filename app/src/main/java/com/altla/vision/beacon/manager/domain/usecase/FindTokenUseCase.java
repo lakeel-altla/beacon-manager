@@ -10,13 +10,13 @@ import rx.schedulers.Schedulers;
 public final class FindTokenUseCase {
 
     @Inject
-    PreferenceRepository mPreferenceRepository;
+    PreferenceRepository preferenceRepository;
 
     @Inject
     public FindTokenUseCase() {
     }
 
     public Single<String> execute() {
-        return mPreferenceRepository.findToken().subscribeOn(Schedulers.io());
+        return preferenceRepository.findToken().subscribeOn(Schedulers.io());
     }
 }

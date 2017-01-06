@@ -11,27 +11,27 @@ import butterknife.OnClick;
 public final class DescriptionLayout {
 
     @BindView(R.id.textView_title)
-    public TextView mTitle;
+    public TextView title;
 
     @BindView(R.id.textView_value)
-    public TextView mValue;
+    public TextView value;
 
-    private boolean mClickable = true;
+    private boolean clickable = true;
 
-    private View.OnClickListener mOnClickListener;
+    private View.OnClickListener onClickListener;
 
     public DescriptionLayout(View.OnClickListener onClickListener) {
-        mOnClickListener = onClickListener;
+        this.onClickListener = onClickListener;
     }
 
     public void setClickable(boolean clickable) {
-        mClickable = clickable;
+        this.clickable = clickable;
     }
 
     @OnClick(R.id.layout)
     public void onClick(View view) {
-        if (mClickable) {
-            mOnClickListener.onClick(view);
+        if (clickable) {
+            onClickListener.onClick(view);
         }
     }
 }

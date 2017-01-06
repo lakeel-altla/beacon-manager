@@ -11,14 +11,14 @@ import rx.schedulers.Schedulers;
 public final class UpdateStabilityUseCase {
 
     @Inject
-    BeaconRepository mBeaconRepository;
+    BeaconRepository beaconRepository;
 
     @Inject
     public UpdateStabilityUseCase() {
     }
 
     public Single<BeaconEntity> execute(String beaconName, String value) {
-        return mBeaconRepository.findBeaconByName(beaconName)
+        return beaconRepository.findBeaconByName(beaconName)
                 .map(beaconEntity -> {
                     beaconEntity.expectedStability = value;
                     return beaconEntity;
@@ -28,6 +28,6 @@ public final class UpdateStabilityUseCase {
     }
 
     Single<BeaconEntity> updateBeacon(BeaconEntity beaconEntity) {
-        return mBeaconRepository.updateBeacon(beaconEntity);
+        return beaconRepository.updateBeacon(beaconEntity);
     }
 }

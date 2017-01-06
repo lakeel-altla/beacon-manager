@@ -10,13 +10,13 @@ import rx.schedulers.Schedulers;
 public final class SaveAccountNameUseCase {
 
     @Inject
-    PreferenceRepository mPreferenceRepository;
+    PreferenceRepository preferenceRepository;
 
     @Inject
     public SaveAccountNameUseCase() {
     }
 
     public Single<String> execute(String accountName) {
-        return mPreferenceRepository.saveAccountName(accountName).subscribeOn(Schedulers.io());
+        return preferenceRepository.saveAccountName(accountName).subscribeOn(Schedulers.io());
     }
 }

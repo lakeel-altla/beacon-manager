@@ -1,14 +1,14 @@
 package com.altla.vision.beacon.manager.data.repository;
 
-import com.orhanobut.hawk.Hawk;
-
 import android.content.Context;
+
+import com.orhanobut.hawk.Hawk;
 
 public final class EncryptedPreferences {
 
     private static final String TOKEN_KEY = "token";
 
-    private static final String PROJECT_ID_KEY = "mProjectId";
+    private static final String PROJECT_ID_KEY = "projectId";
 
     public EncryptedPreferences(Context context) {
         Hawk.init(context).build();
@@ -31,7 +31,6 @@ public final class EncryptedPreferences {
     }
 
     private void setString(String key, String value) {
-        // AES で暗号化。
         Hawk.put(key, value);
     }
 

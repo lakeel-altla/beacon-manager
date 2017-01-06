@@ -4,15 +4,15 @@ public enum BeaconStatus {
 
     UNKNOWN("UNKNOWN"), ACTIVE("ACTIVE"), DECOMMISSIONED("DECOMMISSIONED"), INACTIVE("INACTIVE");
 
-    private String mValue;
+    private String value;
 
     BeaconStatus(String value) {
-        mValue = value;
+        this.value = value;
     }
 
     public static BeaconStatus toStatus(String value) {
         for (BeaconStatus beaconStatus : BeaconStatus.values()) {
-            if (beaconStatus.mValue.equals(value)) {
+            if (beaconStatus.value.equals(value)) {
                 return beaconStatus;
             }
         }
@@ -20,6 +20,6 @@ public enum BeaconStatus {
     }
 
     public String getValue() {
-        return mValue;
+        return value;
     }
 }

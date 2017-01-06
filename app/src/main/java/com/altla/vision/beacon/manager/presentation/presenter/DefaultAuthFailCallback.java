@@ -6,16 +6,16 @@ import rx.functions.Action1;
 
 public abstract class DefaultAuthFailCallback implements Action1<Throwable> {
 
-    private AuthFailure mAuthFailure;
+    private AuthFailure authFailure;
 
     public DefaultAuthFailCallback(AuthFailure failure) {
-        mAuthFailure = failure;
+        authFailure = failure;
     }
 
     @Override
     public void call(Throwable e) {
         if (e instanceof NotAuthorizedException) {
-            mAuthFailure.refreshToken();
+            authFailure.refreshToken();
         } else {
             onError(e);
         }

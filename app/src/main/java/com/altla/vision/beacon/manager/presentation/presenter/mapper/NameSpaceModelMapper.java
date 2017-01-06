@@ -9,7 +9,7 @@ public final class NameSpaceModelMapper {
 
     public NameSpaceModel map(NamespaceEntity entity) {
         NameSpaceModel model = new NameSpaceModel();
-        model.mProjectId = entity.namespaceName.replace(NAMESPACE_PREFIX, "");
+        model.projectId = entity.namespaceName.replace(NAMESPACE_PREFIX, "");
         return model;
     }
 }

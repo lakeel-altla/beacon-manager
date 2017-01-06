@@ -10,13 +10,13 @@ import rx.schedulers.Schedulers;
 public final class SaveTokenUseCase {
 
     @Inject
-    PreferenceRepository mPreferenceRepository;
+    PreferenceRepository preferenceRepository;
 
     @Inject
     public SaveTokenUseCase() {
     }
 
     public Single<String> execute(String token) {
-        return mPreferenceRepository.saveToken(token).subscribeOn(Schedulers.io());
+        return preferenceRepository.saveToken(token).subscribeOn(Schedulers.io());
     }
 }

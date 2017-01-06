@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -56,16 +55,16 @@ import butterknife.ButterKnife;
 public final class BeaconRegisterFragment extends Fragment implements BeaconRegisterView {
 
     @Inject
-    BeaconRegisterPresenter mBeaconRegisterPresenter;
+    BeaconRegisterPresenter beaconRegisterPresenter;
 
     @BindView(R.id.textView_status_description)
-    TextView mStatusDescription;
+    TextView statusDescription;
 
     @BindView(R.id.layout)
-    LinearLayout mLinearLayout;
+    LinearLayout linearLayout;
 
     @BindView(R.id.propertyLayout)
-    TableLayout mPropertyTableLayout;
+    TableLayout propertyTableLayout;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeaconRegisterFragment.class);
 
@@ -73,25 +72,23 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
 
     private static final int REQUEST_CODE_GOOGLE_PLAY_SERVICES_REPAIRABLE = 2;
 
-    private Handler mHandler;
+    private ProgressDialog progressDialog;
 
-    private ProgressDialog mProgressDialog;
+    private TypeLayout typeLayout = new TypeLayout();
 
-    private TypeLayout mTypeLayout = new TypeLayout();
+    private IdLayout idLayout = new IdLayout();
 
-    private IdLayout mIdLayout = new IdLayout();
+    private StatusLayout statusLayout = new StatusLayout();
 
-    private StatusLayout mStatusLayout = new StatusLayout();
+    private DescriptionLayout descriptionLayout;
 
-    private DescriptionLayout mDescriptionLayout;
+    private PlaceIdLayout placeIdLayout;
 
-    private PlaceIdLayout mPlaceIdLayout;
+    private FloorLevelLayout floorLevelLayout;
 
-    private FloorLevelLayout mFloorLevelLayout;
+    private StabilityLayout stabilityLayout;
 
-    private StabilityLayout mStabilityLayout;
-
-    private PropertyHeaderLayout mPropertyHeaderLayout;
+    private PropertyHeaderLayout propertyHeaderLayout;
 
     public static BeaconRegisterFragment newInstance(@NonNull String type, @NonNull String hexId, @NonNull String base64EncodedId) {
 
@@ -113,37 +110,37 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
 
         setHasOptionsMenu(true);
 
-        mDescriptionLayout = new DescriptionLayout(view ->
+        descriptionLayout = new DescriptionLayout(view ->
                 new MaterialDialog.Builder(getContext())
                         .title(R.string.dialog_title_description)
                         .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input(getString(R.string.hint_description), mDescriptionLayout.mValue.getText(), (dialog, input) -> {
-                            mBeaconRegisterPresenter.onDescriptionInputted(input.toString());
+                        .input(getString(R.string.hint_description), descriptionLayout.value.getText(), (dialog, input) -> {
+                            beaconRegisterPresenter.onDescriptionInputted(input.toString());
                         }).show()
         );
 
-        mPlaceIdLayout = new PlaceIdLayout(view -> mBeaconRegisterPresenter.onPlaceIdClicked());
+        placeIdLayout = new PlaceIdLayout(view -> beaconRegisterPresenter.onPlaceIdClicked());
 
-        mFloorLevelLayout = new FloorLevelLayout(view -> new MaterialDialog.Builder(getContext())
+        floorLevelLayout = new FloorLevelLayout(view -> new MaterialDialog.Builder(getContext())
                 .title(R.string.dialog_title_floor_level)
                 .inputType(InputType.TYPE_CLASS_NUMBER)
-                .input(getActivity().getString(R.string.hint_floor_level), mFloorLevelLayout.mValue.getText(), (dialog, input) -> {
-                    mBeaconRegisterPresenter.onFloorLevelInputted(input.toString());
+                .input(getActivity().getString(R.string.hint_floor_level), floorLevelLayout.value.getText(), (dialog, input) -> {
+                    beaconRegisterPresenter.onFloorLevelInputted(input.toString());
                 }).show());
 
-        mStabilityLayout = new StabilityLayout(view ->
+        stabilityLayout = new StabilityLayout(view ->
                 new MaterialDialog.Builder(getContext())
                         .title(R.string.dialog_title_stability)
                         .items(R.array.stability)
                         .itemsCallbackSingleChoice(-1, (dialog, view1, which, input) -> {
-                            mBeaconRegisterPresenter.onStabilityInputted(input.toString());
+                            beaconRegisterPresenter.onStabilityInputted(input.toString());
                             return true;
                         })
                         .positiveText(R.string.dialog_ok)
                         .show()
         );
 
-        mPropertyHeaderLayout = new PropertyHeaderLayout(view -> {
+        propertyHeaderLayout = new PropertyHeaderLayout(view -> {
             View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_property, null);
             new MaterialDialog.Builder(getContext())
                     .title(R.string.dialog_title_property)
@@ -153,7 +150,7 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
                         dialog.dismiss();
                         EditText name = (EditText) dialogView.findViewById(R.id.editText_name);
                         EditText value = (EditText) dialogView.findViewById(R.id.editText_value);
-                        mBeaconRegisterPresenter.onPropertyInputted(name.getText().toString(), value.getText().toString());
+                        beaconRegisterPresenter.onPropertyInputted(name.getText().toString(), value.getText().toString());
                     })
                     .show();
 
@@ -162,19 +159,18 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
         View view = inflater.inflate(R.layout.fragment_beacon_settings, container, false);
 
         ButterKnife.bind(this, view);
-        ButterKnife.bind(mTypeLayout, view.findViewById(R.id.type));
-        ButterKnife.bind(mIdLayout, view.findViewById(R.id.id));
-        ButterKnife.bind(mStatusLayout, view.findViewById(R.id.status));
-        ButterKnife.bind(mDescriptionLayout, view.findViewById(R.id.description));
-        ButterKnife.bind(mPlaceIdLayout, view.findViewById(R.id.place));
-        ButterKnife.bind(mStabilityLayout, view.findViewById(R.id.stability));
-        ButterKnife.bind(mFloorLevelLayout, view.findViewById(R.id.floorLevel));
+        ButterKnife.bind(typeLayout, view.findViewById(R.id.type));
+        ButterKnife.bind(idLayout, view.findViewById(R.id.id));
+        ButterKnife.bind(statusLayout, view.findViewById(R.id.status));
+        ButterKnife.bind(descriptionLayout, view.findViewById(R.id.description));
+        ButterKnife.bind(placeIdLayout, view.findViewById(R.id.place));
+        ButterKnife.bind(stabilityLayout, view.findViewById(R.id.stability));
+        ButterKnife.bind(floorLevelLayout, view.findViewById(R.id.floorLevel));
 
-        mBeaconRegisterPresenter.onCreateView(this);
+        beaconRegisterPresenter.onCreateView(this);
 
-        mHandler = new Handler();
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
         }
 
         return view;
@@ -190,28 +186,28 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
         String type = getArguments().getString(BundleKey.TYPE.name());
         String hexId = getArguments().getString(BundleKey.HEX_ID.name());
         String base64EncodedId = getArguments().getString(BundleKey.BASE64_ENCODED_ID.name());
-        mBeaconRegisterPresenter.setBeaconModel(type, hexId, base64EncodedId);
+        beaconRegisterPresenter.setBeaconModel(type, hexId, base64EncodedId);
 
-        mStatusDescription.setText(R.string.message_beacon_register);
-        mTypeLayout.mTitle.setText(R.string.textView_type);
-        mIdLayout.mTitle.setText(R.string.textView_id);
-        mStatusLayout.mTitle.setText(R.string.textView_status);
-        mDescriptionLayout.mTitle.setText(R.string.textView_description);
-        mPlaceIdLayout.mTitle.setText(R.string.textView_place_id);
-        mStabilityLayout.mTitle.setText(R.string.textView_stability);
-        mFloorLevelLayout.mTitle.setText(R.string.textView_floor_level);
+        statusDescription.setText(R.string.message_beacon_register);
+        typeLayout.title.setText(R.string.textView_type);
+        idLayout.title.setText(R.string.textView_id);
+        statusLayout.title.setText(R.string.textView_status);
+        descriptionLayout.title.setText(R.string.textView_description);
+        placeIdLayout.title.setText(R.string.textView_place_id);
+        stabilityLayout.title.setText(R.string.textView_stability);
+        floorLevelLayout.title.setText(R.string.textView_floor_level);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mBeaconRegisterPresenter.onResume();
+        beaconRegisterPresenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mBeaconRegisterPresenter.onStop();
+        beaconRegisterPresenter.onStop();
     }
 
     @Override
@@ -219,11 +215,11 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
         if (REQUEST_CODE_PLACE_PICKER == requestCode) {
             if (Activity.RESULT_OK == resultCode) {
                 Place place = PlacePicker.getPlace(getActivity(), intent);
-                mBeaconRegisterPresenter.onPlaceSelected(place);
+                beaconRegisterPresenter.onPlaceSelected(place);
             } else {
                 if (Activity.RESULT_CANCELED != resultCode) {
                     LOGGER.error("Failed to select a location");
-                    Snackbar.make(mLinearLayout, R.string.error_process, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(linearLayout, R.string.error_process, Snackbar.LENGTH_SHORT).show();
                 }
             }
         }
@@ -243,7 +239,7 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
                 getActivity().getSupportFragmentManager().popBackStack();
                 return true;
             default:
-                mBeaconRegisterPresenter.onSave();
+                beaconRegisterPresenter.onSave();
                 break;
         }
         return true;
@@ -256,52 +252,52 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mLinearLayout, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(linearLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
         }
-        mProgressDialog.setMessage(getContext().getResources().getString(R.string.message_progress_saving));
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.show();
+        progressDialog.setMessage(getContext().getResources().getString(R.string.message_progress_saving));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
     }
 
     @Override
     public void hideProgressDialog() {
-        mProgressDialog.dismiss();
+        progressDialog.dismiss();
     }
 
     @Override
     public void updateItem(BeaconModel model) {
-        mTypeLayout.mValue.setText(model.mType);
-        mIdLayout.mValue.setText(model.mHexId);
-        mStatusLayout.mValue.setText(model.mStatus);
-        mDescriptionLayout.mValue.setText(model.mDescription);
-        mPlaceIdLayout.mValue.setText(model.mPlaceId);
-        mFloorLevelLayout.mValue.setText(model.mFloorLevel);
-        mStabilityLayout.mValue.setText(model.mStability);
+        typeLayout.value.setText(model.type);
+        idLayout.value.setText(model.hexId);
+        statusLayout.value.setText(model.status);
+        descriptionLayout.value.setText(model.description);
+        placeIdLayout.value.setText(model.placeId);
+        floorLevelLayout.value.setText(model.floorLevel);
+        stabilityLayout.value.setText(model.stability);
 
         //
         // Properties
         //
 
-        // 一度、レイアウトを全て削除。
-        mPropertyTableLayout.removeAllViews();
+        // Remove all views.
+        propertyTableLayout.removeAllViews();
 
-        // ヘッダ追加。
+        // Add a header view.
         TableRow propertyHeader = (TableRow) getActivity().getLayoutInflater().inflate(R.layout.property_header_item, null);
-        ButterKnife.bind(mPropertyHeaderLayout, propertyHeader);
-        mPropertyTableLayout.addView(propertyHeader);
+        ButterKnife.bind(propertyHeaderLayout, propertyHeader);
+        propertyTableLayout.addView(propertyHeader);
 
-        Map<String, String> map = model.mProperties;
+        Map<String, String> map = model.properties;
         if (map != null) {
-            // 行追加。
+            // Add a row.
             for (String key : map.keySet()) {
                 TableRow tableRowItem = (TableRow) getActivity().getLayoutInflater().inflate(R.layout.property_item, null);
-                tableRowItem.findViewById(R.id.imageView_remove).setOnClickListener(view -> mBeaconRegisterPresenter.onPropertyRemoved(key));
+                tableRowItem.findViewById(R.id.imageView_remove).setOnClickListener(view -> beaconRegisterPresenter.onPropertyRemoved(key));
 
                 TextView nameText = (TextView) tableRowItem.findViewById(R.id.property_name_value);
                 TextView valueText = (TextView) tableRowItem.findViewById(R.id.property_value_value);
@@ -309,7 +305,7 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
                 nameText.setText(key);
                 valueText.setText(map.get(key));
 
-                mPropertyTableLayout.addView(tableRowItem);
+                propertyTableLayout.addView(tableRowItem);
             }
         }
     }
@@ -325,7 +321,7 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
         } catch (GooglePlayServicesNotAvailableException e) {
             LOGGER.error("Google play services not availability", e);
             if (ConnectionResult.SUCCESS != e.errorCode) {
-                Snackbar.make(mLinearLayout, R.string.error_google_play_services_unavailable, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(linearLayout, R.string.error_google_play_services_unavailable, Snackbar.LENGTH_SHORT).show();
             }
         }
     }

@@ -10,13 +10,13 @@ import rx.schedulers.Schedulers;
 public final class ActivateBeaconUseCase {
 
     @Inject
-    BeaconRepository mBeaconRepository;
+    BeaconRepository beaconRepository;
 
     @Inject
     public ActivateBeaconUseCase() {
     }
 
     public Single<Object> execute(String name) {
-        return mBeaconRepository.activateBeacon(name).subscribeOn(Schedulers.io());
+        return beaconRepository.activateBeacon(name).subscribeOn(Schedulers.io());
     }
 }

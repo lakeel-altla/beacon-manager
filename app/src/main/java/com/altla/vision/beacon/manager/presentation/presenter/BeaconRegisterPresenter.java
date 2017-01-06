@@ -1,9 +1,5 @@
 package com.altla.vision.beacon.manager.presentation.presenter;
 
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLngBounds;
-
 import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.data.exception.ConflictException;
 import com.altla.vision.beacon.manager.domain.usecase.CreateAttachmentUseCase;
@@ -12,6 +8,9 @@ import com.altla.vision.beacon.manager.domain.usecase.RemoveAttachmentUseCase;
 import com.altla.vision.beacon.manager.presentation.BeaconStatus;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
 import com.altla.vision.beacon.manager.presentation.view.BeaconRegisterView;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,81 +26,81 @@ public final class BeaconRegisterPresenter extends BasePresenter<BeaconRegisterV
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeaconRegisterPresenter.class);
 
-    private BeaconModel mBeaconModel;
+    private BeaconModel beaconModel;
 
     @Inject
-    RegisterBeaconUseCase mRegisterBeaconUseCase;
+    RegisterBeaconUseCase registerBeaconUseCase;
 
     @Inject
-    CreateAttachmentUseCase mCreateAttachmentUseCase;
+    CreateAttachmentUseCase createAttachmentUseCase;
 
     @Inject
-    RemoveAttachmentUseCase mRemoveAttachmentUseCase;
+    RemoveAttachmentUseCase removeAttachmentUseCase;
 
     @Inject
-    public BeaconRegisterPresenter() {
+    BeaconRegisterPresenter() {
     }
 
     @Override
     public void onResume() {
         getView().showTitle(R.string.title_beacon_register);
-        getView().updateItem(mBeaconModel);
+        getView().updateItem(beaconModel);
     }
 
     public void setBeaconModel(String type, String hexId, String base64EncodedId) {
         BeaconModel model = new BeaconModel();
-        model.mType = type;
-        model.mHexId = hexId;
-        model.mBase64EncodedId = base64EncodedId;
-        model.mStatus = BeaconStatus.ACTIVE.name();
-        mBeaconModel = model;
+        model.type = type;
+        model.hexId = hexId;
+        model.base64EncodedId = base64EncodedId;
+        model.status = BeaconStatus.ACTIVE.name();
+        beaconModel = model;
     }
 
     public void onDescriptionInputted(String description) {
-        mBeaconModel.mDescription = description;
-        getView().updateItem(mBeaconModel);
+        beaconModel.description = description;
+        getView().updateItem(beaconModel);
     }
 
     public void onFloorLevelInputted(String floorLevel) {
-        mBeaconModel.mFloorLevel = floorLevel;
-        getView().updateItem(mBeaconModel);
+        beaconModel.floorLevel = floorLevel;
+        getView().updateItem(beaconModel);
     }
 
     public void onStabilityInputted(String stability) {
-        mBeaconModel.mStability = stability;
-        getView().updateItem(mBeaconModel);
+        beaconModel.stability = stability;
+        getView().updateItem(beaconModel);
     }
 
     public void onPlaceIdClicked() {
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        if (mBeaconModel.mLatLng != null) {
-            builder.setLatLngBounds(new LatLngBounds(mBeaconModel.mLatLng, mBeaconModel.mLatLng));
+        if (beaconModel.latLng != null) {
+            builder.setLatLngBounds(new LatLngBounds(beaconModel.latLng, beaconModel.latLng));
         }
         getView().showPlacePicker(builder);
     }
 
     public void onPropertyInputted(String name, String value) {
-        if (mBeaconModel.mProperties == null) {
-            mBeaconModel.mProperties = new HashMap<>();
+        if (beaconModel.properties == null) {
+            beaconModel.properties = new HashMap<>();
         }
-        mBeaconModel.mProperties.put(name, value);
-        getView().updateItem(mBeaconModel);
+        beaconModel.properties.put(name, value);
+        getView().updateItem(beaconModel);
     }
 
     public void onPlaceSelected(Place place) {
-        mBeaconModel.mPlaceId = place.getId();
-        mBeaconModel.mLatLng = place.getLatLng();
+        beaconModel.placeId = place.getId();
+        beaconModel.latLng = place.getLatLng();
 
-        getView().updateItem(mBeaconModel);
+        getView().updateItem(beaconModel);
     }
 
     public void onPropertyRemoved(String key) {
-        mBeaconModel.mProperties.remove(key);
-        getView().updateItem(mBeaconModel);
+        beaconModel.properties.remove(key);
+        getView().updateItem(beaconModel);
     }
 
     public void onSave() {
-        Subscription subscription = mRegisterBeaconUseCase.execute(mBeaconModel)
+        Subscription subscription = registerBeaconUseCase.execute(beaconModel)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(() -> getView().showProgressDialog())
                 .doOnUnsubscribe(() -> getView().hideProgressDialog())

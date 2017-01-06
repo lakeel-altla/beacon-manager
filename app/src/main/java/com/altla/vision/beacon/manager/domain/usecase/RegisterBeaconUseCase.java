@@ -12,13 +12,13 @@ import rx.schedulers.Schedulers;
 public final class RegisterBeaconUseCase {
 
     @Inject
-    BeaconRepository mBeaconRepository;
+    BeaconRepository beaconRepository;
 
     @Inject
     public RegisterBeaconUseCase() {
     }
 
     public Single<BeaconEntity> execute(BeaconModel model) {
-        return mBeaconRepository.registerBeacon(model).subscribeOn(Schedulers.io());
+        return beaconRepository.registerBeacon(model).subscribeOn(Schedulers.io());
     }
 }

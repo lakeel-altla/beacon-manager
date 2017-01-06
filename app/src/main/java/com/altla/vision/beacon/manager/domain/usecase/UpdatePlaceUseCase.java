@@ -14,14 +14,14 @@ import rx.schedulers.Schedulers;
 public final class UpdatePlaceUseCase {
 
     @Inject
-    BeaconRepository mBeaconRepository;
+    BeaconRepository beaconRepository;
 
     @Inject
     public UpdatePlaceUseCase() {
     }
 
     public Single<BeaconEntity> execute(String beaconName, String placeId, LatLng latLng) {
-        return mBeaconRepository.findBeaconByName(beaconName)
+        return beaconRepository.findBeaconByName(beaconName)
                 .map(beaconEntity -> {
                     beaconEntity.placeId = placeId;
                     beaconEntity.latLng = new BeaconEntity.LatLng();
@@ -34,6 +34,6 @@ public final class UpdatePlaceUseCase {
     }
 
     Single<BeaconEntity> updateBeacon(BeaconEntity beaconEntity) {
-        return mBeaconRepository.updateBeacon(beaconEntity);
+        return beaconRepository.updateBeacon(beaconEntity);
     }
 }

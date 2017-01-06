@@ -2,15 +2,15 @@ package com.altla.vision.beacon.manager.presentation;
 
 public enum BeaconType {
 
-    UNKNOWN("UNKNOWN"), IBEACON("IBEACON"), EDDYSTONE("EDDYSTONE");
+    IBEACON("IBEACON"), EDDYSTONE("EDDYSTONE");
 
-    private String mValue;
+    private String value;
 
     BeaconType(String value) {
-        mValue = value;
+        this.value = value;
     }
 
     public String getValue() {
-        return mValue;
+        return value;
     }
 }

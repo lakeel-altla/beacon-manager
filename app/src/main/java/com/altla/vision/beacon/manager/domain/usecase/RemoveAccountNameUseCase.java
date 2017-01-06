@@ -10,13 +10,13 @@ import rx.Single;
 public final class RemoveAccountNameUseCase {
 
     @Inject
-    PreferenceRepository mPreferenceRepository;
+    PreferenceRepository preferenceRepository;
 
     @Inject
     public RemoveAccountNameUseCase() {
     }
 
     public Completable execute() {
-        return mPreferenceRepository.removeAccountName();
+        return preferenceRepository.removeAccountName();
     }
 }

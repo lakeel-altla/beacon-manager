@@ -4,12 +4,12 @@ import rx.subscriptions.CompositeSubscription;
 
 public class BasePresenter<V> {
 
-    protected V mV;
+    private V v;
 
-    protected CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     public void onCreateView(V v) {
-        mV = v;
+        this.v = v;
     }
 
     public void onResume() {
@@ -20,6 +20,6 @@ public class BasePresenter<V> {
     }
 
     protected V getView() {
-        return mV;
+        return v;
     }
 }

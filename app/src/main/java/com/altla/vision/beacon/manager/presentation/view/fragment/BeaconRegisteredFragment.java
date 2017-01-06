@@ -32,17 +32,16 @@ import butterknife.ButterKnife;
 public final class BeaconRegisteredFragment extends Fragment implements RegisteredBeaconView {
 
     @Inject
-    BeaconRegisteredPresenter mBeaconRegisteredPresenter;
+    BeaconRegisteredPresenter beaconRegisteredPresenter;
 
     @BindView(R.id.layout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.recycler_view)
-    UltimateRecyclerView mUltimateRecyclerView;
+    UltimateRecyclerView ultimateRecyclerView;
 
     public static BeaconRegisteredFragment newInstance() {
-        BeaconRegisteredFragment fragment = new BeaconRegisteredFragment();
-        return fragment;
+        return new BeaconRegisteredFragment();
     }
 
     @Override
@@ -54,7 +53,7 @@ public final class BeaconRegisteredFragment extends Fragment implements Register
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mBeaconRegisteredPresenter.onCreateView(this);
+        beaconRegisteredPresenter.onCreateView(this);
 
         return view;
     }
@@ -67,9 +66,9 @@ public final class BeaconRegisteredFragment extends Fragment implements Register
         activity.setDrawerIndicatorEnabled(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        mUltimateRecyclerView.setHasFixedSize(false);
-        mUltimateRecyclerView.setLayoutManager(linearLayoutManager);
-        mUltimateRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        ultimateRecyclerView.setHasFixedSize(false);
+        ultimateRecyclerView.setLayoutManager(linearLayoutManager);
+        ultimateRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -85,32 +84,31 @@ public final class BeaconRegisteredFragment extends Fragment implements Register
                         .findLastVisibleItemPosition();
 
                 if (totalItemCount <= (lastVisibleItem + 1)) {
-                    mBeaconRegisteredPresenter.onRefreshFromBottom();
+                    beaconRegisteredPresenter.onRefreshFromBottom();
                 }
             }
         });
 
-        BeaconRegisteredAdapter adapter = new BeaconRegisteredAdapter(mBeaconRegisteredPresenter);
+        BeaconRegisteredAdapter adapter = new BeaconRegisteredAdapter(beaconRegisteredPresenter);
         adapter.setMode(SwipeItemManagerInterface.Mode.Single);
 
-        // 縦方向のレイアウト。
-        mUltimateRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
-        mUltimateRecyclerView.setAdapter(adapter);
+        ultimateRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        ultimateRecyclerView.setAdapter(adapter);
 
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
-        mSwipeRefreshLayout.setOnRefreshListener(() -> mBeaconRegisteredPresenter.onRefreshFromTop());
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(() -> beaconRegisteredPresenter.onRefreshFromTop());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mBeaconRegisteredPresenter.onResume();
+        beaconRegisteredPresenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mBeaconRegisteredPresenter.onStop();
+        beaconRegisteredPresenter.onStop();
     }
 
     @Override
@@ -130,24 +128,24 @@ public final class BeaconRegisteredFragment extends Fragment implements Register
 
     @Override
     public void updateItems(List<RegisteredBeaconModel> models) {
-        BeaconRegisteredAdapter adapter = ((BeaconRegisteredAdapter) mUltimateRecyclerView.getAdapter());
+        BeaconRegisteredAdapter adapter = ((BeaconRegisteredAdapter) ultimateRecyclerView.getAdapter());
         adapter.removeAll();
         adapter.insert(models);
     }
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mUltimateRecyclerView, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(ultimateRecyclerView, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void showRefreshProgress() {
-        mSwipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideRefreshProgress() {
-        mSwipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

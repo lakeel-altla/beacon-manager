@@ -2,13 +2,13 @@ package com.altla.vision.beacon.manager.presentation.presenter.model;
 
 public final class RegisteredBeaconModel {
 
-    public String mHexId;
+    public String hexId;
 
-    public String mName;
+    public String name;
 
-    public String mType;
+    public String type;
 
-    public String mDescription;
+    public String description;
 
-    public String mStatus;
+    public String status;
 }

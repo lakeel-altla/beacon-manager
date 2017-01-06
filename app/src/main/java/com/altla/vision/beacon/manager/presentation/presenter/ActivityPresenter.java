@@ -1,8 +1,7 @@
 package com.altla.vision.beacon.manager.presentation.presenter;
 
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
+import android.accounts.Account;
+import android.content.Context;
 
 import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.core.StringUtils;
@@ -11,12 +10,12 @@ import com.altla.vision.beacon.manager.domain.usecase.FindTokenUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.RemoveAccountNameUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.SaveTokenUseCase;
 import com.altla.vision.beacon.manager.presentation.view.ActivityView;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.accounts.Account;
-import android.content.Context;
 
 import java.io.IOException;
 
@@ -32,45 +31,45 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
     @Inject
-    FindTokenUseCase mFindTokenUseCase;
+    FindTokenUseCase findTokenUseCase;
 
     @Inject
-    RemoveAccountNameUseCase mRemoveAccountNameUseCase;
+    RemoveAccountNameUseCase removeAccountNameUseCase;
 
     @Inject
-    FindAccountNameUseCase mFindAccountNameUseCase;
+    FindAccountNameUseCase findAccountNameUseCase;
 
     @Inject
-    SaveTokenUseCase mSaveTokenUseCase;
+    SaveTokenUseCase saveTokenUseCase;
 
     private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userlocation.beacon.registry";
 
     @Inject
-    public ActivityPresenter() {
+    ActivityPresenter() {
     }
 
     public void checkAuthentication(Context context) {
-        // アカウント名(メールアドレス)が preference に保持されていれば、
-        // サインイン済みだと判定する。
-        mFindAccountNameUseCase
+        //　If the account name (mail address) is saved in the preference,
+        //  already signed in.
+        findAccountNameUseCase
                 .execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accountName -> {
                     if (StringUtils.isEmpty(accountName)) {
                         getView().showSignInFragment();
                     } else {
-                        // token を更新。
+                        // Update the token.
                         saveToken(context);
                         getView().showBeaconScanFragment();
                     }
-                }, e -> LOGGER.error("Failed to findByBeaconName account mName", e));
+                }, e -> LOGGER.error("Failed to findByBeaconName account name", e));
     }
 
     public void saveToken(Context context) {
-        Subscription subscription = mFindAccountNameUseCase
+        Subscription subscription = findAccountNameUseCase
                 .execute()
                 .flatMap(accountName -> getToken(context, accountName))
-                .flatMap(token -> mSaveTokenUseCase.execute(token))
+                .flatMap(token -> saveTokenUseCase.execute(token))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
                 }, e -> {
@@ -81,16 +80,12 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     public void refreshToken(Context context) {
-
-        // Proximity Beacon API は各 Fragment から呼び出すことになり、
-        // いずれも token の有効期限切れ対応が必要になるため、Activity 側でまとめて対応。
-
-        Subscription subscription = mFindTokenUseCase
+        Subscription subscription = findTokenUseCase
                 .execute()
                 .flatMap(oldToken -> clearToken(context, oldToken))
-                .flatMap(s -> mFindAccountNameUseCase.execute())
+                .flatMap(s -> findAccountNameUseCase.execute())
                 .flatMap(accountName -> getToken(context, accountName))
-                .flatMap(token -> mSaveTokenUseCase.execute(token))
+                .flatMap(token -> saveTokenUseCase.execute(token))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(token -> getView().showSnackBar(R.string.message_try_again),
@@ -106,10 +101,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     }
 
     public void onSignOut(Context context) {
-        Subscription subscription = mFindTokenUseCase
+        Subscription subscription = findTokenUseCase
                 .execute()
                 .flatMap(token -> clearToken(context, token))
-                .flatMap(token -> mRemoveAccountNameUseCase.execute().toSingle(() -> token))
+                .flatMap(token -> removeAccountNameUseCase.execute().toSingle(() -> token))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> getView().showSignInFragment(),
                         e -> {

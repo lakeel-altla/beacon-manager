@@ -11,14 +11,14 @@ import rx.schedulers.Schedulers;
 public final class UpdateFloorLevelUseCase {
 
     @Inject
-    BeaconRepository mBeaconRepository;
+    BeaconRepository beaconRepository;
 
     @Inject
     public UpdateFloorLevelUseCase() {
     }
 
     public Single<BeaconEntity> execute(String beaconName, String floorLevel) {
-        return mBeaconRepository.findBeaconByName(beaconName)
+        return beaconRepository.findBeaconByName(beaconName)
                 .map(beaconEntity -> {
                     if (beaconEntity.indoorLevel == null) {
                         beaconEntity.indoorLevel = new BeaconEntity.IndoorLevel();
@@ -33,6 +33,6 @@ public final class UpdateFloorLevelUseCase {
     }
 
     Single<BeaconEntity> updateBeacon(BeaconEntity beaconEntity) {
-        return mBeaconRepository.updateBeacon(beaconEntity);
+        return beaconRepository.updateBeacon(beaconEntity);
     }
 }

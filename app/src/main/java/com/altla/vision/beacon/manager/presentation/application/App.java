@@ -13,7 +13,7 @@ import android.support.annotation.NonNull;
 
 public class App extends Application {
 
-    private ApplicationComponent mApplicationComponent;
+    private ApplicationComponent applicationComponent;
 
     private static final String I_BEACON_LAYOUT = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
 
@@ -38,12 +38,12 @@ public class App extends Application {
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(BeaconParser.ALTBEACON_LAYOUT));
 
-        mApplicationComponent = DaggerApplicationComponent.builder()
+        applicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
     }
 
     public static ApplicationComponent getApplicationComponent(@NonNull Activity activity) {
-        return ((App) activity.getApplication()).mApplicationComponent;
+        return ((App) activity.getApplication()).applicationComponent;
     }
 }

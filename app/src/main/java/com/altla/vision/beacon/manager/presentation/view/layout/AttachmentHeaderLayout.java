@@ -10,7 +10,7 @@ import butterknife.BindView;
 public final class AttachmentHeaderLayout {
 
     @BindView(R.id.imageView_add)
-    ImageView mImageView;
+    ImageView imageView;
 
     private View.OnClickListener mOnClickListener;
 
@@ -20,9 +20,9 @@ public final class AttachmentHeaderLayout {
 
     public void setClickable(boolean clickable) {
         if (!clickable) {
-            mImageView.setVisibility(View.GONE);
+            imageView.setVisibility(View.GONE);
         } else {
-            mImageView.setOnClickListener(view -> mOnClickListener.onClick(view));
+            imageView.setOnClickListener(view -> mOnClickListener.onClick(view));
         }
     }
 }

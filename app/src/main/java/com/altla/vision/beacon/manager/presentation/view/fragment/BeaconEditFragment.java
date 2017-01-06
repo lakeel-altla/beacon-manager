@@ -58,19 +58,19 @@ import butterknife.ButterKnife;
 public class BeaconEditFragment extends Fragment implements BeaconEditView {
 
     @Inject
-    BeaconEditPresenter mBeaconEditPresenter;
+    BeaconEditPresenter beaconEditPresenter;
 
     @BindView(R.id.textView_status_description)
-    TextView mStatusDescription;
+    TextView statusDescription;
 
     @BindView(R.id.layout)
-    LinearLayout mLinearLayout;
+    LinearLayout linearLayout;
 
     @BindView(R.id.propertyLayout)
-    TableLayout mPropertyTableLayout;
+    TableLayout propertyTableLayout;
 
     @BindView(R.id.attachmentLayout)
-    TableLayout mAttachmentTableLayout;
+    TableLayout attachmentTableLayout;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeaconEditFragment.class);
 
@@ -78,25 +78,25 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
 
     private static final int REQUEST_CODE_GOOGLE_PLAY_SERVICES_REPAIRABLE = 2;
 
-    private ProgressDialog mProgressDialog;
+    private ProgressDialog progressDialog;
 
-    private TypeLayout mTypeLayout = new TypeLayout();
+    private TypeLayout typeLayout = new TypeLayout();
 
-    private IdLayout mIdLayout = new IdLayout();
+    private IdLayout idLayout = new IdLayout();
 
-    private StatusLayout mStatusLayout = new StatusLayout();
+    private StatusLayout statusLayout = new StatusLayout();
 
-    private DescriptionLayout mDescriptionLayout;
+    private DescriptionLayout descriptionLayout;
 
-    private PlaceIdLayout mPlaceIdLayout;
+    private PlaceIdLayout placeIdLayout;
 
-    private FloorLevelLayout mFloorLevelLayout;
+    private FloorLevelLayout floorLevelLayout;
 
-    private StabilityLayout mStabilityLayout;
+    private StabilityLayout stabilityLayout;
 
-    private PropertyHeaderLayout mPropertyHeaderLayout;
+    private PropertyHeaderLayout propertyHeaderLayout;
 
-    private AttachmentHeaderLayout mAttachmentHeaderLayout;
+    private AttachmentHeaderLayout attachmentHeaderLayout;
 
     public static BeaconEditFragment newInstance(String name, BeaconStatus beaconStatus) {
 
@@ -112,44 +112,40 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // 呼び出さなければ、onOptionsItemSelected() が呼ばれない。
         setHasOptionsMenu(true);
 
-        // 各種設定項目のレイアウトの初期化。
-
-        mDescriptionLayout = new DescriptionLayout(view ->
+        descriptionLayout = new DescriptionLayout(view ->
                 new MaterialDialog.Builder(getContext())
                         .title(R.string.dialog_title_description)
                         .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input(getString(R.string.hint_description), mDescriptionLayout.mValue.getText(), (dialog, input) -> {
-                            mBeaconEditPresenter.onDescriptionInputted(input.toString());
+                        .input(getString(R.string.hint_description), descriptionLayout.value.getText(), (dialog, input) -> {
+                            beaconEditPresenter.onDescriptionInputted(input.toString());
                         }).show()
         );
 
-        mPlaceIdLayout = new PlaceIdLayout(view -> mBeaconEditPresenter.onPlaceIdClicked());
+        placeIdLayout = new PlaceIdLayout(view -> beaconEditPresenter.onPlaceIdClicked());
 
-        mFloorLevelLayout = new FloorLevelLayout(view ->
+        floorLevelLayout = new FloorLevelLayout(view ->
                 new MaterialDialog.Builder(getContext())
                         .title(R.string.dialog_title_floor_level)
                         .inputType(InputType.TYPE_CLASS_NUMBER)
-                        .input(getActivity().getString(R.string.hint_floor_level), mFloorLevelLayout.mValue.getText(), (dialog, input) -> {
-                            mBeaconEditPresenter.onFloorLevelInputted(input.toString());
+                        .input(getActivity().getString(R.string.hint_floor_level), floorLevelLayout.value.getText(), (dialog, input) -> {
+                            beaconEditPresenter.onFloorLevelInputted(input.toString());
                         }).show());
 
-        mStabilityLayout = new StabilityLayout(view ->
+        stabilityLayout = new StabilityLayout(view ->
                 new MaterialDialog.Builder(getContext())
                         .title(R.string.dialog_title_stability)
                         .items(R.array.stability)
                         .itemsCallbackSingleChoice(-1, (dialog, view1, which, input) -> {
-                            mBeaconEditPresenter.onStabilityInputted(input.toString());
+                            beaconEditPresenter.onStabilityInputted(input.toString());
                             return true;
                         })
                         .positiveText(R.string.dialog_ok)
                         .show()
         );
 
-        mPropertyHeaderLayout = new PropertyHeaderLayout(view -> {
+        propertyHeaderLayout = new PropertyHeaderLayout(view -> {
             View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_property, null);
             new MaterialDialog.Builder(getContext())
                     .title(R.string.dialog_title_property)
@@ -159,13 +155,13 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
                         dialog.dismiss();
                         EditText name = (EditText) dialogView.findViewById(R.id.editText_name);
                         EditText value = (EditText) dialogView.findViewById(R.id.editText_value);
-                        mBeaconEditPresenter.onPropertyInputted(name.getText().toString(), value.getText().toString());
+                        beaconEditPresenter.onPropertyInputted(name.getText().toString(), value.getText().toString());
                     })
                     .show();
 
         });
 
-        mAttachmentHeaderLayout = new AttachmentHeaderLayout(view -> {
+        attachmentHeaderLayout = new AttachmentHeaderLayout(view -> {
             View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_attachment, null);
             new MaterialDialog.Builder(getContext())
                     .title(R.string.dialog_title_attachment)
@@ -175,25 +171,25 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
                         dialog.dismiss();
                         EditText type = (EditText) dialogView.findViewById(R.id.editText_type);
                         EditText data = (EditText) dialogView.findViewById(R.id.editText_data);
-                        mBeaconEditPresenter.onAttachmentInputted(type.getText().toString(), data.getText().toString());
+                        beaconEditPresenter.onAttachmentInputted(type.getText().toString(), data.getText().toString());
                     })
                     .show();
         });
 
         View view = inflater.inflate(R.layout.fragment_beacon_settings, container, false);
         ButterKnife.bind(this, view);
-        ButterKnife.bind(mTypeLayout, view.findViewById(R.id.type));
-        ButterKnife.bind(mIdLayout, view.findViewById(R.id.id));
-        ButterKnife.bind(mStatusLayout, view.findViewById(R.id.status));
-        ButterKnife.bind(mDescriptionLayout, view.findViewById(R.id.description));
-        ButterKnife.bind(mPlaceIdLayout, view.findViewById(R.id.place));
-        ButterKnife.bind(mStabilityLayout, view.findViewById(R.id.stability));
-        ButterKnife.bind(mFloorLevelLayout, view.findViewById(R.id.floorLevel));
+        ButterKnife.bind(typeLayout, view.findViewById(R.id.type));
+        ButterKnife.bind(idLayout, view.findViewById(R.id.id));
+        ButterKnife.bind(statusLayout, view.findViewById(R.id.status));
+        ButterKnife.bind(descriptionLayout, view.findViewById(R.id.description));
+        ButterKnife.bind(placeIdLayout, view.findViewById(R.id.place));
+        ButterKnife.bind(stabilityLayout, view.findViewById(R.id.stability));
+        ButterKnife.bind(floorLevelLayout, view.findViewById(R.id.floorLevel));
 
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mBeaconEditPresenter.onCreateView(this);
+        beaconEditPresenter.onCreateView(this);
 
         return view;
     }
@@ -202,13 +198,13 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
 
-        mTypeLayout.mTitle.setText(R.string.textView_type);
-        mIdLayout.mTitle.setText(R.string.textView_id);
-        mStatusLayout.mTitle.setText(R.string.textView_status);
-        mDescriptionLayout.mTitle.setText(R.string.textView_description);
-        mPlaceIdLayout.mTitle.setText(R.string.textView_place_id);
-        mStabilityLayout.mTitle.setText(R.string.textView_stability);
-        mFloorLevelLayout.mTitle.setText(R.string.textView_floor_level);
+        typeLayout.title.setText(R.string.textView_type);
+        idLayout.title.setText(R.string.textView_id);
+        statusLayout.title.setText(R.string.textView_status);
+        descriptionLayout.title.setText(R.string.textView_description);
+        placeIdLayout.title.setText(R.string.textView_place_id);
+        stabilityLayout.title.setText(R.string.textView_stability);
+        floorLevelLayout.title.setText(R.string.textView_floor_level);
 
         MainActivity activity = (MainActivity) getActivity();
         activity.setDrawerIndicatorEnabled(false);
@@ -217,22 +213,22 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
     @Override
     public void onResume() {
         super.onResume();
-        mBeaconEditPresenter.onResume();
+        beaconEditPresenter.onResume();
 
         BeaconStatus beaconStatus = BeaconStatus.toStatus((String) getArguments().get(BundleKey.STATUS.name()));
         switch (beaconStatus) {
             case ACTIVE:
-                mStatusDescription.setText(R.string.message_beacon_activate);
+                statusDescription.setText(R.string.message_beacon_activate);
                 break;
             case INACTIVE:
-                mStatusDescription.setText(R.string.message_beacon_deactivate);
+                statusDescription.setText(R.string.message_beacon_deactivate);
                 break;
             case DECOMMISSIONED:
-                mDescriptionLayout.setClickable(false);
-                mPlaceIdLayout.setClickable(false);
-                mFloorLevelLayout.setClickable(false);
-                mStabilityLayout.setClickable(false);
-                mStatusDescription.setText(R.string.message_beacon_decommissioned);
+                descriptionLayout.setClickable(false);
+                placeIdLayout.setClickable(false);
+                floorLevelLayout.setClickable(false);
+                stabilityLayout.setClickable(false);
+                statusDescription.setText(R.string.message_beacon_decommissioned);
                 break;
             default:
                 LOGGER.warn("Unknown beacon beaconStatus:beaconStatus=", beaconStatus.getValue());
@@ -240,14 +236,14 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
         }
 
         String beaconName = (String) getArguments().get(BundleKey.NAME.name());
-        mBeaconEditPresenter.setBeaconModel(beaconName);
-        mBeaconEditPresenter.findBeacon();
+        beaconEditPresenter.setBeaconModel(beaconName);
+        beaconEditPresenter.findBeacon();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mBeaconEditPresenter.onStop();
+        beaconEditPresenter.onStop();
     }
 
     @Override
@@ -268,11 +264,11 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
         if (REQUEST_CODE_PLACE_PICKER == requestCode) {
             if (Activity.RESULT_OK == resultCode) {
                 Place place = PlacePicker.getPlace(getActivity(), intent);
-                mBeaconEditPresenter.onSelectedPlace(place);
+                beaconEditPresenter.onSelectedPlace(place);
             } else {
                 if (Activity.RESULT_CANCELED != resultCode) {
                     LOGGER.error("Failed to select a location");
-                    Snackbar.make(mLinearLayout, R.string.error_process, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(linearLayout, R.string.error_process, Snackbar.LENGTH_SHORT).show();
                 }
             }
         }
@@ -285,38 +281,38 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mLinearLayout, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(linearLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void updateItem(BeaconModel model) {
-        mTypeLayout.mValue.setText(model.mType);
-        mIdLayout.mValue.setText(model.mHexId);
-        mStatusLayout.mValue.setText(model.mStatus);
-        mDescriptionLayout.mValue.setText(model.mDescription);
-        mPlaceIdLayout.mValue.setText(model.mPlaceId);
-        mFloorLevelLayout.mValue.setText(model.mFloorLevel);
-        mStabilityLayout.mValue.setText(model.mStability);
+        typeLayout.value.setText(model.type);
+        idLayout.value.setText(model.hexId);
+        statusLayout.value.setText(model.status);
+        descriptionLayout.value.setText(model.description);
+        placeIdLayout.value.setText(model.placeId);
+        floorLevelLayout.value.setText(model.floorLevel);
+        stabilityLayout.value.setText(model.stability);
 
-        boolean isClickable = BeaconStatus.DECOMMISSIONED != BeaconStatus.toStatus(model.mStatus);
+        boolean isClickable = BeaconStatus.DECOMMISSIONED != BeaconStatus.toStatus(model.status);
 
         //
         // Properties
         //
 
-        // 一度、全ての View を削除。
-        mPropertyTableLayout.removeAllViews();
+        // Remove all views.
+        propertyTableLayout.removeAllViews();
 
-        // ヘッダ追加。
+        // Add a header view.
         View tableRowHeaderView = getActivity().getLayoutInflater().inflate(R.layout.property_header_item, null);
-        ButterKnife.bind(mPropertyHeaderLayout, tableRowHeaderView);
+        ButterKnife.bind(propertyHeaderLayout, tableRowHeaderView);
 
-        mPropertyHeaderLayout.setClickable(isClickable);
-        mPropertyTableLayout.addView(tableRowHeaderView);
+        propertyHeaderLayout.setClickable(isClickable);
+        propertyTableLayout.addView(tableRowHeaderView);
 
-        Map<String, String> map = model.mProperties;
+        Map<String, String> map = model.properties;
         if (map != null) {
-            // 行追加。
+            // Add rows.
             for (String key : map.keySet()) {
                 TableRow tableRowItem = (TableRow) getActivity().getLayoutInflater().inflate(R.layout.property_item, null);
                 TextView nameText = (TextView) tableRowItem.findViewById(R.id.property_name_value);
@@ -326,13 +322,13 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
                 valueText.setText(map.get(key));
 
                 ImageView removeButton = (ImageView) tableRowItem.findViewById(R.id.imageView_remove);
-                if (BeaconStatus.DECOMMISSIONED == BeaconStatus.toStatus(model.mStatus)) {
+                if (BeaconStatus.DECOMMISSIONED == BeaconStatus.toStatus(model.status)) {
                     removeButton.setVisibility(View.GONE);
                 } else {
-                    removeButton.setOnClickListener(view -> mBeaconEditPresenter.onPropertyRemoved(key));
+                    removeButton.setOnClickListener(view -> beaconEditPresenter.onPropertyRemoved(key));
                 }
 
-                mPropertyTableLayout.addView(tableRowItem);
+                propertyTableLayout.addView(tableRowItem);
             }
         }
     }
@@ -343,19 +339,19 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
         // Attachments
         //
 
-        // 一度、レイアウトを全て削除。
-        mAttachmentTableLayout.removeAllViews();
+        // Remove all views.
+        attachmentTableLayout.removeAllViews();
 
-        // ヘッダ追加。
+        // Add a header view.
         View attachmentHeaderView = getActivity().getLayoutInflater().inflate(R.layout.attachment_header_item, null);
-        ButterKnife.bind(mAttachmentHeaderLayout, attachmentHeaderView);
+        ButterKnife.bind(attachmentHeaderLayout, attachmentHeaderView);
 
         boolean isClickable = BeaconStatus.DECOMMISSIONED != status;
-        mAttachmentHeaderLayout.setClickable(isClickable);
-        mAttachmentTableLayout.addView(attachmentHeaderView);
+        attachmentHeaderLayout.setClickable(isClickable);
+        attachmentTableLayout.addView(attachmentHeaderView);
 
         if (!CollectionUtils.isEmpty(attachmentModels)) {
-            // 行追加。
+            // Add a row.
             for (AttachmentModel attachmentModel : attachmentModels) {
                 TableRow tableRowItem = (TableRow) getActivity().getLayoutInflater().inflate(R.layout.attachment_item, null);
 
@@ -368,17 +364,17 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
                     case ACTIVE:
                     case INACTIVE:
                     default:
-                        removeButton.setOnClickListener(view -> mBeaconEditPresenter.onAttachmentRemoved(attachmentModel));
+                        removeButton.setOnClickListener(view -> beaconEditPresenter.onAttachmentRemoved(attachmentModel));
                         break;
                 }
 
                 TextView typeText = (TextView) tableRowItem.findViewById(R.id.attachment_type_value);
                 TextView dataText = (TextView) tableRowItem.findViewById(R.id.attachment_data_value);
 
-                typeText.setText(attachmentModel.mType);
-                dataText.setText(attachmentModel.mData);
+                typeText.setText(attachmentModel.type);
+                dataText.setText(attachmentModel.data);
 
-                mAttachmentTableLayout.addView(tableRowItem);
+                attachmentTableLayout.addView(tableRowItem);
             }
         }
     }
@@ -394,23 +390,23 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
         } catch (GooglePlayServicesNotAvailableException e) {
             LOGGER.error("Google play services not availability", e);
             if (ConnectionResult.SUCCESS != e.errorCode) {
-                Snackbar.make(mLinearLayout, R.string.error_google_play_services_unavailable, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(linearLayout, R.string.error_google_play_services_unavailable, Snackbar.LENGTH_SHORT).show();
             }
         }
     }
 
     @Override
     public void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getContext());
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getContext());
         }
-        mProgressDialog.setMessage(getContext().getResources().getString(R.string.message_progress_saving));
-        mProgressDialog.show();
+        progressDialog.setMessage(getContext().getResources().getString(R.string.message_progress_saving));
+        progressDialog.show();
     }
 
     @Override
     public void hideProgressDialog() {
-        mProgressDialog.hide();
+        progressDialog.hide();
     }
 
     @Override

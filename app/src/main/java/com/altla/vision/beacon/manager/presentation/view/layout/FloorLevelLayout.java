@@ -11,27 +11,27 @@ import butterknife.OnClick;
 public final class FloorLevelLayout {
 
     @BindView(R.id.textView_title)
-    public TextView mTitle;
+    public TextView title;
 
     @BindView(R.id.textView_value)
-    public TextView mValue;
+    public TextView value;
 
-    private View.OnClickListener mOnClickListener;
+    private View.OnClickListener onClickListener;
 
-    private boolean mClickable = true;
+    private boolean clickable = true;
 
     public FloorLevelLayout(View.OnClickListener onClickListener) {
-        mOnClickListener = onClickListener;
+        this.onClickListener = onClickListener;
     }
 
     public void setClickable(boolean clickable) {
-        mClickable = clickable;
+        this.clickable = clickable;
     }
 
     @OnClick(R.id.layout)
     public void onClick(View view) {
-        if (mClickable) {
-            mOnClickListener.onClick(view);
+        if (clickable) {
+            onClickListener.onClick(view);
         }
     }
 }

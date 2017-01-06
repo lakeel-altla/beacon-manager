@@ -10,19 +10,19 @@ import butterknife.BindView;
 public final class PropertyHeaderLayout {
 
     @BindView(R.id.imageView_add)
-    ImageView mImageView;
+    ImageView imageView;
 
-    private View.OnClickListener mOnClickListener;
+    private View.OnClickListener onClickListener;
 
     public PropertyHeaderLayout(View.OnClickListener onClickListener) {
-        mOnClickListener = onClickListener;
+        this.onClickListener = onClickListener;
     }
 
     public void setClickable(boolean isClickable) {
         if (!isClickable) {
-            mImageView.setVisibility(View.GONE);
+            imageView.setVisibility(View.GONE);
         } else {
-            mImageView.setOnClickListener(view -> mOnClickListener.onClick(view));
+            imageView.setOnClickListener(view -> onClickListener.onClick(view));
         }
     }
 }

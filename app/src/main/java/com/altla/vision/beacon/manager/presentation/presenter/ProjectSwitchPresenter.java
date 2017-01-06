@@ -1,5 +1,7 @@
 package com.altla.vision.beacon.manager.presentation.presenter;
 
+import android.support.annotation.IntRange;
+
 import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.domain.usecase.FindNamespacesUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.FindProjectIdUseCase;
@@ -11,8 +13,6 @@ import com.altla.vision.beacon.manager.presentation.view.SwitchProjectView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.support.annotation.IntRange;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,19 +26,19 @@ import rx.android.schedulers.AndroidSchedulers;
 public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectView> implements AuthFailure {
 
     @Inject
-    FindProjectIdUseCase mFindProjectIdUseCase;
+    FindProjectIdUseCase findProjectIdUseCase;
 
     @Inject
-    FindNamespacesUseCase mFindNamespacesUseCase;
+    FindNamespacesUseCase findNamespacesUseCase;
 
     @Inject
-    SaveProjectIdUseCase mSaveProjectIdUseCase;
+    SaveProjectIdUseCase saveProjectIdUseCase;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectSwitchItemPresenter.class);
 
-    private List<NameSpaceModel> mNameSpaceModels = new ArrayList<>();
+    private List<NameSpaceModel> nameSpaceModels = new ArrayList<>();
 
-    private final NameSpaceModelMapper mNameSpaceModelMapper = new NameSpaceModelMapper();
+    private final NameSpaceModelMapper nameSpaceModelMapper = new NameSpaceModelMapper();
 
     @Inject
     public ProjectSwitchPresenter() {
@@ -48,7 +48,7 @@ public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectVie
     public void onResume() {
         getView().showTitle(R.string.title_switch_project);
 
-        Subscription subscription = mFindProjectIdUseCase
+        Subscription subscription = findProjectIdUseCase
                 .execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(projectId -> getView().showCurrentProject(projectId),
@@ -62,15 +62,15 @@ public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectVie
                         });
         mCompositeSubscription.add(subscription);
 
-        Subscription subscription1 = mFindNamespacesUseCase
+        Subscription subscription1 = findNamespacesUseCase
                 .execute()
                 .flatMapObservable(namespacesEntity -> Observable.from(namespacesEntity.namespaces))
-                .map(mNameSpaceModelMapper::map)
+                .map(nameSpaceModelMapper::map)
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(nameSpaceModels -> {
-                    mNameSpaceModels.clear();
-                    mNameSpaceModels.addAll(nameSpaceModels);
+                    this.nameSpaceModels.clear();
+                    this.nameSpaceModels.addAll(nameSpaceModels);
                     getView().updateItems();
                 }, new DefaultAuthFailCallback(this) {
 
@@ -90,7 +90,7 @@ public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectVie
     }
 
     public int getItemCount() {
-        return mNameSpaceModels.size();
+        return nameSpaceModels.size();
     }
 
     @Override
@@ -102,14 +102,14 @@ public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectVie
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(mNameSpaceModels.get(position));
+            getItemView().showItem(nameSpaceModels.get(position));
         }
 
         public void onItemClick(NameSpaceModel model) {
-            Subscription subscription = mSaveProjectIdUseCase
-                    .execute(model.mProjectId)
+            Subscription subscription = saveProjectIdUseCase
+                    .execute(model.projectId)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(s -> getView().showCurrentProject(model.mProjectId),
+                    .subscribe(s -> getView().showCurrentProject(model.projectId),
                             new DefaultAuthFailCallback(ProjectSwitchPresenter.this) {
                                 @Override
                                 void onError(Throwable e) {

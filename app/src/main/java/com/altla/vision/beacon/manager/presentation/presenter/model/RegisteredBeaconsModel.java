@@ -4,9 +4,9 @@ import java.util.List;
 
 public final class RegisteredBeaconsModel {
 
-    public List<RegisteredBeaconModel> mModels;
+    public List<RegisteredBeaconModel> models;
 
-    public String mNextPageToken;
+    public String nextPageToken;
 
-    public String mTotalCount;
+    public String totalCount;
 }

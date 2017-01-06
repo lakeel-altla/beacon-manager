@@ -4,10 +4,10 @@ public enum BeaconName {
 
     UNKNOWN("UNKNOWN"), IBEACON("IBEACON"), EDDYSTONE("EDDYSTONE"), EDDYSTONE_EID("EDDYSTONE_EID"), ALTBEACON("ALTBEACON");
 
-    private String mValue;
+    private String value;
 
     BeaconName(String value) {
-        mValue = value;
+        this.value = value;
     }
 
     public static BeaconName toBeaconName(String value) {
@@ -20,6 +20,6 @@ public enum BeaconName {
     }
 
     public String getValue() {
-        return mValue;
+        return value;
     }
 }

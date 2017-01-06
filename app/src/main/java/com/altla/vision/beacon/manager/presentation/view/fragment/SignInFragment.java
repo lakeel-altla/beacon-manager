@@ -31,10 +31,10 @@ import butterknife.OnClick;
 public class SignInFragment extends Fragment implements SignInView {
 
     @Inject
-    SignInPresenter mSignInPresenter;
+    SignInPresenter signInPresenter;
 
     @BindView(R.id.layout)
-    RelativeLayout mRelativeLayout;
+    RelativeLayout relativeLayout;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SignInFragment.class);
 
@@ -57,7 +57,7 @@ public class SignInFragment extends Fragment implements SignInView {
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        mSignInPresenter.onCreateView(this);
+        signInPresenter.onCreateView(this);
 
         return view;
     }
@@ -70,13 +70,13 @@ public class SignInFragment extends Fragment implements SignInView {
     @Override
     public void onResume() {
         super.onResume();
-        mSignInPresenter.onResume();
+        signInPresenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mSignInPresenter.onStop();
+        signInPresenter.onStop();
     }
 
     @Override
@@ -86,17 +86,17 @@ public class SignInFragment extends Fragment implements SignInView {
             case REQUEST_CODE_PICK_ACCOUNT:
                 if (resultCode == Activity.RESULT_OK) {
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    mSignInPresenter.onPikedUpAccount(getActivity(), accountName);
+                    signInPresenter.onPikedUpAccount(getActivity(), accountName);
                 } else if (resultCode == Activity.RESULT_CANCELED) {
-                    Snackbar.make(mRelativeLayout, R.string.message_pick_account, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(relativeLayout, R.string.message_pick_account, Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             case REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR:
                 if (resultCode == Activity.RESULT_OK) {
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    mSignInPresenter.onPikedUpAccount(getActivity(), accountName);
+                    signInPresenter.onPikedUpAccount(getActivity(), accountName);
                 } else if (resultCode == Activity.RESULT_CANCELED) {
-                    Snackbar.make(mRelativeLayout, R.string.message_pick_account, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(relativeLayout, R.string.message_pick_account, Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -122,7 +122,7 @@ public class SignInFragment extends Fragment implements SignInView {
     public void showGooglePlayErrorDialog(int statusCode) {
         GooglePlayServicesUtil.showErrorDialogFragment(statusCode, getActivity(), SignInFragment.this, REQUEST_CODE_GOOGLE_PLAY_SERVICES_ERROR,
                 dialogInterface -> {
-                    Snackbar.make(mRelativeLayout, R.string.error_google_play_service_unavailable, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(relativeLayout, R.string.error_google_play_service_unavailable, Snackbar.LENGTH_SHORT).show();
                     dialogInterface.dismiss();
                 });
     }
@@ -141,6 +141,6 @@ public class SignInFragment extends Fragment implements SignInView {
 
     @Override
     public void showSnackBar(int resId) {
-        Snackbar.make(mRelativeLayout, resId, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(relativeLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
 }

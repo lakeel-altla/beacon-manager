@@ -1,5 +1,14 @@
 package com.altla.vision.beacon.manager.presentation.presenter;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.RemoteException;
+import android.support.annotation.IntRange;
+
 import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.presentation.presenter.mapper.NearbyBeaconModelMapper;
 import com.altla.vision.beacon.manager.presentation.presenter.model.NearbyBeaconModel;
@@ -11,15 +20,6 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.RemoteException;
-import android.support.annotation.IntRange;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,19 +37,19 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NearbyBeaconPresenter.class);
 
-    private NearbyBeaconModelMapper mNearbyBeaconModelMapper = new NearbyBeaconModelMapper();
+    private NearbyBeaconModelMapper nearbyBeaconModelMapper = new NearbyBeaconModelMapper();
 
-    private final List<NearbyBeaconModel> mNearbyBeaconModels = new ArrayList<>();
+    private final List<NearbyBeaconModel> nearbyBeaconModels = new ArrayList<>();
 
-    private Context mContext;
+    private Context context;
 
-    private BeaconManager mBeaconManager;
+    private BeaconManager beaconManager;
 
-    private boolean mIsScanning;
+    private boolean isScanning;
 
     @Inject
     NearbyBeaconPresenter(Context context) {
-        mContext = context;
+        this.context = context;
     }
 
     @Override
@@ -59,12 +59,12 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
 
     @Override
     public void onStop() {
-        if (mBeaconManager != null) {
-            mBeaconManager.unbind(this);
+        if (beaconManager != null) {
+            beaconManager.unbind(this);
         }
         mCompositeSubscription.unsubscribe();
 
-        mIsScanning = false;
+        isScanning = false;
     }
 
     public void checkBleEnabled(Activity activity) {
@@ -76,13 +76,13 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
             LOGGER.warn("Bluetooth is disable");
             getView().showBleEnabledActivity();
         } else {
-            mBeaconManager = BeaconManager.getInstanceForApplication(mContext);
+            beaconManager = BeaconManager.getInstanceForApplication(context);
         }
     }
 
     public void setBeaconManager() {
-        mBeaconManager = BeaconManager.getInstanceForApplication(mContext);
-        mBeaconManager.bind(this);
+        beaconManager = BeaconManager.getInstanceForApplication(context);
+        beaconManager.bind(this);
     }
 
     public void onCreateItemView(NearbyBeaconItemView nearbyBeaconItemView) {
@@ -92,32 +92,32 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
     }
 
     public int getItemCount() {
-        return mNearbyBeaconModels.size();
+        return nearbyBeaconModels.size();
     }
 
     public void onRefresh() {
-        if (mIsScanning) {
+        if (isScanning) {
             return;
         }
 
-        if (mBeaconManager == null) {
+        if (beaconManager == null) {
             getView().showSnackBar(R.string.error_ble_disable);
         } else {
-            getView().removeAllItems(mNearbyBeaconModels.size());
+            getView().removeAllItems(nearbyBeaconModels.size());
 
-            mNearbyBeaconModels.clear();
-            mIsScanning = true;
+            nearbyBeaconModels.clear();
+            isScanning = true;
 
-            mBeaconManager.bind(this);
+            beaconManager.bind(this);
 
             // In consideration of the battery, so as only to scan only a certain period of time by the timer.
             ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
             executor.schedule(() -> {
                 // To stop the scan after 5 seconds.
-                mBeaconManager.unbind(this);
-                mIsScanning = false;
+                beaconManager.unbind(this);
+                isScanning = false;
 
-                if (mNearbyBeaconModels.size() == 0) {
+                if (nearbyBeaconModels.size() == 0) {
                     getView().showSnackBar(R.string.message_not_found);
                 }
             }, 5, TimeUnit.SECONDS);
@@ -128,24 +128,24 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
     public void onBeaconServiceConnect() {
 
         // Start range scan.
-        mBeaconManager.addRangeNotifier((beacons, region) -> {
+        beaconManager.addRangeNotifier((beacons, region) -> {
             if (beacons.size() > 0) {
                 Subscription subscription = Observable.from(beacons)
                         .filter(beacon -> {
                             int serviceUuid = beacon.getServiceUuid();
                             int beaconTypeCode = beacon.getBeaconTypeCode();
                             return serviceUuid == 0xfeaa && beaconTypeCode == 0x00 || serviceUuid == 0xfeaa && beaconTypeCode == 0x30 || serviceUuid == -1 && beaconTypeCode == 533;
-                        }).map(filteredBeacon -> mNearbyBeaconModelMapper.map(filteredBeacon))
+                        }).map(filteredBeacon -> nearbyBeaconModelMapper.map(filteredBeacon))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(scannedModel -> {
-                            for (NearbyBeaconModel model : mNearbyBeaconModels) {
-                                if (model.mHexId.equals(scannedModel.mHexId)) {
+                            for (NearbyBeaconModel model : nearbyBeaconModels) {
+                                if (model.hexId.equals(scannedModel.hexId)) {
                                     return;
                                 }
                             }
 
-                            mNearbyBeaconModels.add(scannedModel);
+                            nearbyBeaconModels.add(scannedModel);
                             getView().updateItems();
                         }, e -> {
                             LOGGER.error("Failed to scan beacons", e);
@@ -157,7 +157,7 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
 
         try {
             // Start ranging any beacons(iBeacon/Eddystone/AltBeacon). To see App class.
-            mBeaconManager.startRangingBeaconsInRegion(new Region("uniqueId", null, null, null));
+            beaconManager.startRangingBeaconsInRegion(new Region("uniqueId", null, null, null));
         } catch (RemoteException e) {
             LOGGER.error("Failed to start ranging beacons", e);
             getView().showSnackBar(R.string.error_process);
@@ -166,17 +166,17 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
 
     @Override
     public Context getApplicationContext() {
-        return mContext;
+        return context;
     }
 
     @Override
     public void unbindService(ServiceConnection serviceConnection) {
-        mContext.unbindService(serviceConnection);
+        context.unbindService(serviceConnection);
     }
 
     @Override
     public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
-        return mContext.bindService(intent, serviceConnection, i);
+        return context.bindService(intent, serviceConnection, i);
     }
 
     @Override
@@ -188,11 +188,11 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(mNearbyBeaconModels.get(position));
+            getItemView().showItem(nearbyBeaconModels.get(position));
         }
 
         public void onItemClick(NearbyBeaconModel model) {
-            getView().showBeaconRegisterFragment(model.mType.getValue(), model.mHexId, model.mBase64EncodedId);
+            getView().showBeaconRegisterFragment(model.type.getValue(), model.hexId, model.base64EncodedId);
         }
     }
 }
