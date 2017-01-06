@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        // TODO: Android 6 系の Permission 対応。
+        // TODO: Android 6 Permission
         if (requestCode != REQUEST_CODE_ACCESS_FINE_LOCATION) {
             LOGGER.warn("Permission denied");
         }

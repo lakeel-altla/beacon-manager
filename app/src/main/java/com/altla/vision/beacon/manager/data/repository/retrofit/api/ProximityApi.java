@@ -24,7 +24,7 @@ public interface ProximityApi {
     Single<BeaconsEntity> find(@Header("Authorization") String authorization, @Query("projectId") String projectId, @Query("pageToken") String pageToken);
 
     // Memo:
-    // @Query 引数は @Path より前に設定しなければならない。
+    // @Path arguments must be set first than @Query arguments.
     @Headers({"Content-Type: application/json"})
     @GET("{beaconName}")
     Single<BeaconEntity> findBeacon(@Header("Authorization") String authorization, @Path(value = "beaconName", encoded = true) String beaconName, @Query("projectId") String projectId);
@@ -38,10 +38,10 @@ public interface ProximityApi {
     Single<BeaconAttachmentsEntity> findAttachments(@Header("Authorization") String authorization, @Path(value = "beaconName", encoded = true) String beaconName);
 
     // Memo:
-    // Retrofit のライブラリの処理の中で、リクエスト URI のパース処理を行っています。
-    // しかし、リクエスト URI に ':' が含まれてしまうと、スキーマのプレフィックスと見なされ、
-    // 例外が投げられてしまいます。
-    // そのパース処理を避けるため、基底 URI からのパス指定にしています。
+    // Retrofit parse the request URI.
+    // But, If ':' is included in the request URI, it is regarded as a schema prefix,
+    // an exception will be thrown.
+    // In order to avoid that parsing process, designate the path from the base URI.
     @Headers({"Content-Type: application/json"})
     @POST("/v1beta1/beacons:register")
     Single<BeaconEntity> registerBeacon(@Header("Authorization") String authorization, @Query("projectId") String projectId, @Body BeaconEntity entity);

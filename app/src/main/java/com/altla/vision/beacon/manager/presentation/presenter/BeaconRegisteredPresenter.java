@@ -91,7 +91,6 @@ public final class BeaconRegisteredPresenter extends BasePresenter<RegisteredBea
                     totalCount = Integer.parseInt(model.totalCount);
                     nextPageToken = model.nextPageToken;
 
-                    // 追加取得を行うため、リストに追加する。clear してはならない。
                     registeredBeaconModels.addAll(model.models);
                     sort();
 
@@ -197,7 +196,7 @@ public final class BeaconRegisteredPresenter extends BasePresenter<RegisteredBea
     }
 
     private void sort() {
-        // ID でソート。
+        // Sort by beacon id.
         Collections.sort(registeredBeaconModels, (model1, model2) -> model1.hexId.compareTo(model2.hexId));
     }
 }
