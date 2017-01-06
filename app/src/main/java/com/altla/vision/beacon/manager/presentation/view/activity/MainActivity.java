@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity
 
         private FragmentManager mFragmentManager;
 
-        public FragmentController(FragmentManager fragmentManager) {
+        FragmentController(FragmentManager fragmentManager) {
             mFragmentManager = fragmentManager;
         }
 
