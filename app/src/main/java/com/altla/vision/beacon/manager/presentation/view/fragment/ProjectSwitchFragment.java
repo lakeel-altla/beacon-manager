@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class ProjectFragmentSwitch extends Fragment implements ProjectSwitchView {
+public final class ProjectSwitchFragment extends Fragment implements ProjectSwitchView {
 
     @Inject
     ProjectSwitchPresenter projectSwitchPresenter;
@@ -36,8 +36,8 @@ public final class ProjectFragmentSwitch extends Fragment implements ProjectSwit
     @BindView(R.id.textView_current_project)
     TextView textView;
 
-    public static ProjectFragmentSwitch newInstance() {
-        return new ProjectFragmentSwitch();
+    public static ProjectSwitchFragment newInstance() {
+        return new ProjectSwitchFragment();
     }
 
     @Override
