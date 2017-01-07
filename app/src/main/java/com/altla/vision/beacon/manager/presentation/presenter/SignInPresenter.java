@@ -54,7 +54,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 .flatMap(s -> saveAccountName(accountName))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> getView().showBeaconScanFragment(),
+                .subscribe(s -> getView().showNearbyBeaconFragment(),
                         e -> {
                             // Check authorized result.
                             if (e instanceof UserRecoverableAuthException) {

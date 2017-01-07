@@ -134,9 +134,9 @@ public class SignInFragment extends Fragment implements SignInView {
     }
 
     @Override
-    public void showBeaconScanFragment() {
+    public void showNearbyBeaconFragment() {
         MainActivity activity = ((MainActivity) getActivity());
-        activity.showBeaconScanFragment();
+        activity.showNearbyBeaconFragment();
     }
 
     @Override

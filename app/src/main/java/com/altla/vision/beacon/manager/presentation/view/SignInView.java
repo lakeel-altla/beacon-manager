@@ -11,7 +11,7 @@ public interface SignInView {
 
     void showOAuthActivity(Intent intent);
 
-    void showBeaconScanFragment();
+    void showNearbyBeaconFragment();
 
     void showSnackBar(@StringRes int resId);
 }

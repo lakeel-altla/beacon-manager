@@ -39,7 +39,7 @@ public final class FragmentController {
         replaceFragment(R.id.fragment_place_holder, fragment, SIGN_IN_FRAGMENT_TAG);
     }
 
-    public void showBeaconScanFragment() {
+    public void showNearbyBeaconFragment() {
         NearbyBeaconFragment fragment = NearbyBeaconFragment.newInstance();
         replaceFragment(R.id.fragment_place_holder, fragment, NEARBY_BEACON_FRAGMENT_TAG);
     }

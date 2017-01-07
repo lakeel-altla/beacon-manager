@@ -12,7 +12,6 @@ import com.altla.vision.beacon.manager.domain.usecase.SaveTokenUseCase;
 import com.altla.vision.beacon.manager.presentation.view.ActivityView;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +23,8 @@ import javax.inject.Inject;
 import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public final class ActivityPresenter extends BasePresenter<ActivityView> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
 
     @Inject
     FindTokenUseCase findTokenUseCase;
@@ -42,13 +38,18 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
     @Inject
     SaveTokenUseCase saveTokenUseCase;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ActivityPresenter.class);
+
+    private Context context;
+
     private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userlocation.beacon.registry";
 
     @Inject
-    ActivityPresenter() {
+    ActivityPresenter(Context context) {
+        this.context = context;
     }
 
-    public void checkAuthentication(Context context) {
+    public void onSignIn() {
         //　If the account name (mail address) is saved in the preference,
         //  already signed in.
         findAccountNameUseCase
@@ -59,16 +60,16 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                         getView().showSignInFragment();
                     } else {
                         // Update the token.
-                        saveToken(context);
-                        getView().showBeaconScanFragment();
+                        saveToken();
+                        getView().showNearbyBeaconFragment();
                     }
                 }, e -> LOGGER.error("Failed to findByBeaconName account name", e));
     }
 
-    public void saveToken(Context context) {
+    public void saveToken() {
         Subscription subscription = findAccountNameUseCase
                 .execute()
-                .flatMap(accountName -> getToken(context, accountName))
+                .flatMap(this::getToken)
                 .flatMap(token -> saveTokenUseCase.execute(token))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
@@ -79,10 +80,10 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         subscriptions.add(subscription);
     }
 
-    public void onSignOut(Context context) {
+    public void onSignOut() {
         Subscription subscription = findTokenUseCase
                 .execute()
-                .flatMap(token -> clearToken(context, token))
+                .flatMap(this::clearToken)
                 .flatMap(token -> removeAccountNameUseCase.execute().toSingle(() -> token))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> getView().showSignInFragment(),
@@ -93,7 +94,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         subscriptions.add(subscription);
     }
 
-    Single<String> clearToken(Context context, String token) {
+    private Single<String> clearToken(String token) {
         return Single.create(subscriber -> {
             try {
                 GoogleAuthUtil.clearToken(context, token);
@@ -104,7 +105,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         });
     }
 
-    Single<String> getToken(Context context, String accountName) {
+    private Single<String> getToken(String accountName) {
         return Single.create(subscriber -> {
             try {
                 Account account = new Account(accountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);

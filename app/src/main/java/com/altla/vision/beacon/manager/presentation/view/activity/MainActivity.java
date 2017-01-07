@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         activityPresenter.onCreateView(this);
-        activityPresenter.checkAuthentication(getApplicationContext());
+        activityPresenter.onSignIn();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_RECOVERABLE_AUTH) {
-            activityPresenter.saveToken(getApplicationContext());
+            activityPresenter.saveToken();
         }
     }
 
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_nearby_beacon:
-                new FragmentController(getSupportFragmentManager()).showBeaconScanFragment();
+                new FragmentController(getSupportFragmentManager()).showNearbyBeaconFragment();
                 break;
             case R.id.nav_registered:
                 new FragmentController(getSupportFragmentManager()).showBeaconListFragment();
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity
                 new FragmentController(getSupportFragmentManager()).showProjectSwitchFragment();
                 break;
             case R.id.nav_sign_out:
-                activityPresenter.onSignOut(MainActivity.this);
+                activityPresenter.onSignOut();
                 break;
             default:
                 break;
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showBeaconScanFragment() {
+    public void showNearbyBeaconFragment() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -166,12 +166,7 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
         FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showBeaconScanFragment();
-    }
-
-    @Override
-    public void showUserRecoverableAuthDialog(Intent intent) {
-        startActivityForResult(intent, REQUEST_CODE_RECOVERABLE_AUTH);
+        fragmentController.showNearbyBeaconFragment();
     }
 
     @Override
