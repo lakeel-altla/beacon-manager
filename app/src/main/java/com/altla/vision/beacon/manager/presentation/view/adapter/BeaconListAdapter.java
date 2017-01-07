@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.presentation.constants.BeaconStatus;
-import com.altla.vision.beacon.manager.presentation.presenter.BeaconRegisteredPresenter;
+import com.altla.vision.beacon.manager.presentation.presenter.BeaconListPresenter;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconListModel;
 import com.altla.vision.beacon.manager.presentation.view.BeaconListItemView;
 import com.marshalchen.ultimaterecyclerview.SwipeableUltimateViewAdapter;
@@ -22,11 +22,11 @@ import butterknife.ButterKnife;
 
 public final class BeaconListAdapter extends SwipeableUltimateViewAdapter<BeaconListModel> {
 
-    private BeaconRegisteredPresenter beaconRegisteredPresenter;
+    private BeaconListPresenter beaconListPresenter;
 
-    public BeaconListAdapter(BeaconRegisteredPresenter presenter) {
+    public BeaconListAdapter(BeaconListPresenter presenter) {
         super(new ArrayList<>());
-        beaconRegisteredPresenter = presenter;
+        beaconListPresenter = presenter;
     }
 
     @Override
@@ -37,7 +37,7 @@ public final class BeaconListAdapter extends SwipeableUltimateViewAdapter<Beacon
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
         BeaconListViewHolder beaconListViewHolder = new BeaconListViewHolder(view, true);
-        beaconRegisteredPresenter.onCreateItemView(beaconListViewHolder);
+        beaconListPresenter.onCreateItemView(beaconListViewHolder);
         return beaconListViewHolder;
     }
 
@@ -73,7 +73,7 @@ public final class BeaconListAdapter extends SwipeableUltimateViewAdapter<Beacon
         @BindView(R.id.button_decommission)
         Button decommissionButton;
 
-        private BeaconRegisteredPresenter.BeaconListIemPresenter itemPresenter;
+        private BeaconListPresenter.BeaconListIemPresenter itemPresenter;
 
         public BeaconListViewHolder(View itemView, boolean bind) {
             super(itemView);
@@ -90,7 +90,7 @@ public final class BeaconListAdapter extends SwipeableUltimateViewAdapter<Beacon
         }
 
         @Override
-        public void setItemPresenter(BeaconRegisteredPresenter.BeaconListIemPresenter beaconListIemPresenter) {
+        public void setItemPresenter(BeaconListPresenter.BeaconListIemPresenter beaconListIemPresenter) {
             itemPresenter = beaconListIemPresenter;
         }
 

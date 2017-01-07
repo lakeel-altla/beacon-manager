@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.presentation.constants.BeaconStatus;
-import com.altla.vision.beacon.manager.presentation.presenter.BeaconRegisteredPresenter;
+import com.altla.vision.beacon.manager.presentation.presenter.BeaconListPresenter;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconListModel;
 import com.altla.vision.beacon.manager.presentation.view.BeaconListView;
 import com.altla.vision.beacon.manager.presentation.view.FragmentController;
@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 public final class BeaconListFragment extends Fragment implements BeaconListView {
 
     @Inject
-    BeaconRegisteredPresenter beaconRegisteredPresenter;
+    BeaconListPresenter beaconListPresenter;
 
     @BindView(R.id.layout)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -54,7 +54,7 @@ public final class BeaconListFragment extends Fragment implements BeaconListView
         // Dagger
         MainActivity.getUserComponent(this).inject(this);
 
-        beaconRegisteredPresenter.onCreateView(this);
+        beaconListPresenter.onCreateView(this);
 
         return view;
     }
@@ -85,31 +85,31 @@ public final class BeaconListFragment extends Fragment implements BeaconListView
                         .findLastVisibleItemPosition();
 
                 if (totalItemCount <= (lastVisibleItem + 1)) {
-                    beaconRegisteredPresenter.onRefreshFromBottom();
+                    beaconListPresenter.onRefreshFromBottom();
                 }
             }
         });
 
-        BeaconListAdapter adapter = new BeaconListAdapter(beaconRegisteredPresenter);
+        BeaconListAdapter adapter = new BeaconListAdapter(beaconListPresenter);
         adapter.setMode(SwipeItemManagerInterface.Mode.Single);
 
         ultimateRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
         ultimateRecyclerView.setAdapter(adapter);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
-        swipeRefreshLayout.setOnRefreshListener(() -> beaconRegisteredPresenter.onRefreshFromTop());
+        swipeRefreshLayout.setOnRefreshListener(() -> beaconListPresenter.onRefreshFromTop());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        beaconRegisteredPresenter.onResume();
+        beaconListPresenter.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        beaconRegisteredPresenter.onStop();
+        beaconListPresenter.onStop();
     }
 
     @Override

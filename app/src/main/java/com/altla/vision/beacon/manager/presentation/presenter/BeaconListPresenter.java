@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public final class BeaconRegisteredPresenter extends BasePresenter<BeaconListView> implements AuthFailure {
+public final class BeaconListPresenter extends BasePresenter<BeaconListView> implements AuthFailure {
 
     @Inject
     FindBeaconsUseCase findBeaconsUseCase;
@@ -39,7 +39,7 @@ public final class BeaconRegisteredPresenter extends BasePresenter<BeaconListVie
     @Inject
     DecommissionBeaconUseCase decommissionBeaconUseCase;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BeaconRegisteredPresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BeaconListPresenter.class);
 
     private String nextPageToken;
 
@@ -52,7 +52,7 @@ public final class BeaconRegisteredPresenter extends BasePresenter<BeaconListVie
     private RegisteredBeaconsMapper mapper = new RegisteredBeaconsMapper();
 
     @Inject
-    BeaconRegisteredPresenter() {
+    BeaconListPresenter() {
     }
 
     @Override
