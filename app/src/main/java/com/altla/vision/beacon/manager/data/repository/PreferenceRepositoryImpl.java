@@ -1,10 +1,5 @@
 package com.altla.vision.beacon.manager.data.repository;
 
-import com.altla.vision.beacon.manager.core.StringUtils;
-import com.altla.vision.beacon.manager.data.entity.PreferencesEntity;
-
-import android.content.SharedPreferences;
-
 import javax.inject.Inject;
 
 import rx.Completable;
@@ -12,11 +7,6 @@ import rx.Single;
 import rx.SingleSubscriber;
 
 public class PreferenceRepositoryImpl implements PreferenceRepository {
-
-    private static final String ACCOUNT_NAME_KEY = "accountName";
-
-    @Inject
-    SharedPreferences sharedPreferences;
 
     @Inject
     EncryptedPreferences encryptedPreferences;
@@ -27,7 +17,7 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
 
     @Override
     public Single<String> findAccountName() {
-        String accountName = sharedPreferences.getString(ACCOUNT_NAME_KEY, StringUtils.EMPTY);
+        String accountName = encryptedPreferences.getAccountName();
         return Single.just(accountName);
     }
 
@@ -46,8 +36,7 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
     @Override
     public Single<String> saveAccountName(String accountName) {
         return Single.create(subscriber -> {
-            SharedPreferences.Editor editor = sharedPreferences.edit().putString(ACCOUNT_NAME_KEY, accountName);
-            editor.commit();
+            encryptedPreferences.saveAccountName(accountName);
             subscriber.onSuccess(accountName);
         });
     }
@@ -55,8 +44,7 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
     @Override
     public Completable removeAccountName() {
         return Completable.create(subscriber -> {
-            SharedPreferences.Editor editor = sharedPreferences.edit().remove(ACCOUNT_NAME_KEY);
-            editor.apply();
+            encryptedPreferences.removeAccountName();
             subscriber.onCompleted();
         });
     }
@@ -81,12 +69,5 @@ public class PreferenceRepositoryImpl implements PreferenceRepository {
                 subscriber.onSuccess(projectId);
             }
         });
-    }
-
-    @Override
-    public Single<PreferencesEntity> findPreferencesData() {
-        String token = encryptedPreferences.getToken();
-        String projectId = encryptedPreferences.getProjectId();
-        return Single.just(new PreferencesEntity(token, projectId));
     }
 }

@@ -51,12 +51,12 @@ public class RepositoryModule {
 
     @ActivityScope
     @Provides
-    OkHttpClient provideOkHttpClient(@Named("connectTimeout") long connectTimeout, @Named("readTimeout") long readTimeout, EncryptedPreferences preferences) {
+    OkHttpClient provideOkHttpClient(@Named("connectTimeout") long connectTimeout, @Named("readTimeout") long readTimeout, Context context, EncryptedPreferences preferences) {
         return new OkHttpClient()
                 .newBuilder()
                 .connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
                 .readTimeout(readTimeout, TimeUnit.MILLISECONDS)
-                .addInterceptor(new RetrofitInterceptor(preferences))
+                .addInterceptor(new RetrofitInterceptor(context, preferences))
                 .build();
     }
 

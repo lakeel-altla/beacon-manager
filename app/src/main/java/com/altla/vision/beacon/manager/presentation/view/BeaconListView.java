@@ -1,13 +1,13 @@
 package com.altla.vision.beacon.manager.presentation.view;
 
+import android.support.annotation.StringRes;
+
 import com.altla.vision.beacon.manager.presentation.constants.BeaconStatus;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconListModel;
 
-import android.support.annotation.StringRes;
-
 import java.util.List;
 
-public interface BeaconListView extends AuthView {
+public interface BeaconListView {
 
     void showTitle(@StringRes int resId);
 

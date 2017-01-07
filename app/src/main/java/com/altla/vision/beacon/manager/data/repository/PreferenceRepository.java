@@ -1,7 +1,5 @@
 package com.altla.vision.beacon.manager.data.repository;
 
-import com.altla.vision.beacon.manager.data.entity.PreferencesEntity;
-
 import rx.Completable;
 import rx.Single;
 
@@ -20,6 +18,4 @@ public interface PreferenceRepository {
     Single<String> saveToken(String token);
 
     Single<String> saveProjectId(String nameSpace);
-
-    Single<PreferencesEntity> findPreferencesData();
 }

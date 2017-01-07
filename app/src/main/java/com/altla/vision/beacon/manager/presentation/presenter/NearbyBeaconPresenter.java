@@ -33,7 +33,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView> implements BeaconConsumer, AuthFailure {
+public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView> implements BeaconConsumer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NearbyBeaconPresenter.class);
 
@@ -178,12 +178,7 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
     public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
         return context.bindService(intent, serviceConnection, i);
     }
-
-    @Override
-    public void refreshToken() {
-        getView().refreshToken();
-    }
-
+    
     public final class NearbyBeaconItemPresenter extends BaseItemPresenter<NearbyBeaconItemView> {
 
         @Override

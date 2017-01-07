@@ -35,7 +35,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> implements AuthFailure {
+public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> {
 
     @Inject
     FindBeaconUseCase findBeaconUseCase;
@@ -103,13 +103,9 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                 .subscribe(model -> {
                     beaconModel = model;
                     getView().updateItem(beaconModel);
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to find beacon", e);
-                        getView().showSnackBar(R.string.error_process);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to find beacon", e);
+                    getView().showSnackBar(R.string.error_process);
                 });
         subscriptions.add(subscription);
 
@@ -125,13 +121,9 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                     attachmentModels.clear();
                     attachmentModels.addAll(models);
                     getView().updateAttachments(attachmentModels, BeaconStatus.toStatus(beaconModel.status));
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to find attachments", e);
-                        getView().showSnackBar(R.string.error_process);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to find attachments", e);
+                    getView().showSnackBar(R.string.error_process);
                 });
         subscriptions.add(subscription1);
     }
@@ -146,13 +138,9 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                 .subscribe(model -> {
                     beaconModel = model;
                     getView().updateItem(beaconModel);
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to update description", e);
-                        getView().showSnackBar(R.string.error_update);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to update description", e);
+                    getView().showSnackBar(R.string.error_update);
                 });
         subscriptions.add(subscription);
     }
@@ -167,13 +155,9 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                 .subscribe(model -> {
                     beaconModel = model;
                     getView().updateItem(beaconModel);
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to update floor level", e);
-                        getView().showSnackBar(R.string.error_update);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to update floor level", e);
+                    getView().showSnackBar(R.string.error_update);
                 });
         subscriptions.add(subscription);
     }
@@ -188,13 +172,9 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                 .subscribe(model -> {
                     beaconModel = model;
                     getView().updateItem(beaconModel);
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to update floor level", e);
-                        getView().showSnackBar(R.string.error_update);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to update floor level", e);
+                    getView().showSnackBar(R.string.error_update);
                 });
         subscriptions.add(subscription);
     }
@@ -217,13 +197,9 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                 .subscribe(model -> {
                     beaconModel = model;
                     getView().updateItem(beaconModel);
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to update place", e);
-                        getView().showSnackBar(R.string.error_update);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to update place", e);
+                    getView().showSnackBar(R.string.error_update);
                 });
         subscriptions.add(subscription);
     }
@@ -238,13 +214,9 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                 .subscribe(model -> {
                     beaconModel = model;
                     getView().updateItem(beaconModel);
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to update property", e);
-                        getView().showSnackBar(R.string.error_update);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to update property", e);
+                    getView().showSnackBar(R.string.error_update);
                 });
         subscriptions.add(subscription);
     }
@@ -262,12 +234,9 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                 .subscribe(model -> {
                     beaconModel = model;
                     getView().updateItem(beaconModel);
-                }, new DefaultAuthFailCallback(this) {
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to remove property", e);
-                        getView().showSnackBar(R.string.error_remove);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to remove property", e);
+                    getView().showSnackBar(R.string.error_remove);
                 });
         subscriptions.add(subscription);
     }
@@ -283,13 +252,9 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                 .subscribe(model -> {
                     attachmentModels.add(model);
                     getView().updateAttachments(attachmentModels, BeaconStatus.toStatus(beaconModel.status));
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to create attachment", e);
-                        getView().showSnackBar(R.string.error_add);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to create attachment", e);
+                    getView().showSnackBar(R.string.error_add);
                 });
         subscriptions.add(subscription);
     }
@@ -303,19 +268,10 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                 .subscribe(o -> {
                     attachmentModels.remove(model);
                     getView().updateAttachments(attachmentModels, BeaconStatus.toStatus(beaconModel.status));
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to remove attachment", e);
-                        getView().showSnackBar(R.string.error_remove);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to remove attachment", e);
+                    getView().showSnackBar(R.string.error_remove);
                 });
         subscriptions.add(subscription);
-    }
-
-    @Override
-    public void refreshToken() {
-        getView().refreshToken();
     }
 }

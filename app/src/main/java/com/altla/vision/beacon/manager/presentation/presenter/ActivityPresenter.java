@@ -79,27 +79,6 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
         subscriptions.add(subscription);
     }
 
-    public void refreshToken(Context context) {
-        Subscription subscription = findTokenUseCase
-                .execute()
-                .flatMap(oldToken -> clearToken(context, oldToken))
-                .flatMap(s -> findAccountNameUseCase.execute())
-                .flatMap(accountName -> getToken(context, accountName))
-                .flatMap(token -> saveTokenUseCase.execute(token))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(token -> getView().showSnackBar(R.string.message_try_again),
-                        e -> {
-                            LOGGER.error("Failed to refresh token", e);
-                            if (e instanceof UserRecoverableAuthException) {
-                                getView().showUserRecoverableAuthDialog(((UserRecoverableAuthException) e).getIntent());
-                            } else {
-                                getView().showSnackBar(R.string.error_process);
-                            }
-                        });
-        subscriptions.add(subscription);
-    }
-
     public void onSignOut(Context context) {
         Subscription subscription = findTokenUseCase
                 .execute()

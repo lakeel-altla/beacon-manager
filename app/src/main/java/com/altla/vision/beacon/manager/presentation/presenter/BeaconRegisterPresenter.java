@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public final class BeaconRegisterPresenter extends BasePresenter<BeaconRegisterView> implements AuthFailure {
+public final class BeaconRegisterPresenter extends BasePresenter<BeaconRegisterView> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeaconRegisterPresenter.class);
 
@@ -107,25 +107,17 @@ public final class BeaconRegisterPresenter extends BasePresenter<BeaconRegisterV
                 .subscribe(entity -> {
                     getView().showSnackBar(R.string.message_registered);
                     getView().showBeaconRegisteredFragment();
-                }, new DefaultAuthFailCallback(this) {
+                }, e -> {
+                    LOGGER.error("Failed to save beacon", e);
 
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to save beacon", e);
+                    if (e instanceof ConflictException) {
+                        getView().showSnackBar(R.string.error_already_registered);
+                        getView().showBeaconRegisteredFragment();
+                    } else {
+                        getView().showSnackBar(R.string.error_register);
 
-                        if (e instanceof ConflictException) {
-                            getView().showSnackBar(R.string.error_already_registered);
-                            getView().showBeaconRegisteredFragment();
-                        } else {
-                            getView().showSnackBar(R.string.error_register);
-                        }
                     }
                 });
         subscriptions.add(subscription);
-    }
-
-    @Override
-    public void refreshToken() {
-        getView().refreshToken();
     }
 }

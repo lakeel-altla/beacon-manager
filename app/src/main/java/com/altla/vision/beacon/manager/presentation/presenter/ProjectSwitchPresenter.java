@@ -23,7 +23,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectView> implements AuthFailure {
+public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectView> {
 
     @Inject
     FindProjectIdUseCase findProjectIdUseCase;
@@ -52,13 +52,10 @@ public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectVie
                 .execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(projectId -> getView().showCurrentProject(projectId),
-                        new DefaultAuthFailCallback(this) {
+                        e -> {
+                            LOGGER.error("Failed to find current project id", e);
+                            getView().showSnackBar(R.string.error_find_current_project_id);
 
-                            @Override
-                            void onError(Throwable e) {
-                                LOGGER.error("Failed to find current project id", e);
-                                getView().showSnackBar(R.string.error_find_current_project_id);
-                            }
                         });
         subscriptions.add(subscription);
 
@@ -72,13 +69,9 @@ public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectVie
                     this.nameSpaceModels.clear();
                     this.nameSpaceModels.addAll(nameSpaceModels);
                     getView().updateItems();
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to find namespaces", e);
-                        getView().showSnackBar(R.string.error_find);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to find namespaces", e);
+                    getView().showSnackBar(R.string.error_find);
                 });
         subscriptions.add(subscription1);
     }
@@ -93,11 +86,6 @@ public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectVie
         return nameSpaceModels.size();
     }
 
-    @Override
-    public void refreshToken() {
-        getView().refreshToken();
-    }
-
     public final class ProjectSwitchItemPresenter extends BaseItemPresenter<ProjectSwitchItemView> {
 
         @Override
@@ -110,11 +98,8 @@ public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectVie
                     .execute(model.projectId)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(s -> getView().showCurrentProject(model.projectId),
-                            new DefaultAuthFailCallback(ProjectSwitchPresenter.this) {
-                                @Override
-                                void onError(Throwable e) {
-                                    LOGGER.error("Failed to switch project", e);
-                                }
+                            e -> {
+                                LOGGER.error("Failed to switch project", e);
                             });
             subscriptions.add(subscription);
         }

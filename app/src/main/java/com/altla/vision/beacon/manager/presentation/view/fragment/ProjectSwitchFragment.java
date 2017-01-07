@@ -82,11 +82,6 @@ public final class ProjectSwitchFragment extends Fragment implements SwitchProje
     }
 
     @Override
-    public void refreshToken() {
-        ((MainActivity) getActivity()).refreshToken();
-    }
-
-    @Override
     public void showTitle(int resId) {
         getActivity().setTitle(resId);
     }

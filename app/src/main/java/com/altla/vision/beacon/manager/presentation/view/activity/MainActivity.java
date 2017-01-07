@@ -183,10 +183,6 @@ public class MainActivity extends AppCompatActivity
         toggle.setDrawerIndicatorEnabled(enabled);
     }
 
-    public void refreshToken() {
-        activityPresenter.refreshToken(getApplicationContext());
-    }
-
     public static UserComponent getUserComponent(@NonNull Fragment fragment) {
         return ((MainActivity) fragment.getActivity()).userComponent;
     }

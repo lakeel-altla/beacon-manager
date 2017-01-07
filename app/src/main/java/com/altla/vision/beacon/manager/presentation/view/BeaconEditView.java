@@ -1,16 +1,15 @@
 package com.altla.vision.beacon.manager.presentation.view;
 
-import com.google.android.gms.location.places.ui.PlacePicker;
+import android.support.annotation.StringRes;
 
 import com.altla.vision.beacon.manager.presentation.constants.BeaconStatus;
 import com.altla.vision.beacon.manager.presentation.presenter.model.AttachmentModel;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
-
-import android.support.annotation.StringRes;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.util.List;
 
-public interface BeaconEditView extends AuthView {
+public interface BeaconEditView {
 
     void showTitle(@StringRes int resId);
 

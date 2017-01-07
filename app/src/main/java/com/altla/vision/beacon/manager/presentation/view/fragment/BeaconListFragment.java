@@ -149,9 +149,4 @@ public final class BeaconListFragment extends Fragment implements BeaconListView
     public void hideRefreshProgress() {
         swipeRefreshLayout.setRefreshing(false);
     }
-
-    @Override
-    public void refreshToken() {
-        ((MainActivity) getActivity()).refreshToken();
-    }
 }

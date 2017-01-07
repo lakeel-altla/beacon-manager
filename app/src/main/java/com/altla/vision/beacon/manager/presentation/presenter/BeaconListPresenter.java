@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public final class BeaconListPresenter extends BasePresenter<BeaconListView> implements AuthFailure {
+public final class BeaconListPresenter extends BasePresenter<BeaconListView> {
 
     @Inject
     FindBeaconsUseCase findBeaconsUseCase;
@@ -61,11 +61,6 @@ public final class BeaconListPresenter extends BasePresenter<BeaconListView> imp
         findLatestBeacons();
     }
 
-    @Override
-    public void refreshToken() {
-        getView().refreshToken();
-    }
-
     public void onRefreshFromTop() {
         findLatestBeacons();
     }
@@ -95,15 +90,10 @@ public final class BeaconListPresenter extends BasePresenter<BeaconListView> imp
                     sort();
 
                     getView().updateItems(beaconListModels);
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to find beacons", e);
-
-                        isNextBeaconsFetching = false;
-                        getView().showSnackBar(R.string.error_find);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to find beacons", e);
+                    isNextBeaconsFetching = false;
+                    getView().showSnackBar(R.string.error_find);
                 });
         subscriptions.add(subscription);
     }
@@ -124,13 +114,9 @@ public final class BeaconListPresenter extends BasePresenter<BeaconListView> imp
                     sort();
 
                     getView().updateItems(beaconListModels);
-                }, new DefaultAuthFailCallback(this) {
-
-                    @Override
-                    void onError(Throwable e) {
-                        LOGGER.error("Failed to find beacons", e);
-                        getView().showSnackBar(R.string.error_find);
-                    }
+                }, e -> {
+                    LOGGER.error("Failed to find beacons", e);
+                    getView().showSnackBar(R.string.error_find);
                 });
         subscriptions.add(subscription);
     }

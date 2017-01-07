@@ -3,7 +3,7 @@ package com.altla.vision.beacon.manager.presentation.view;
 import android.support.annotation.IntRange;
 import android.support.annotation.StringRes;
 
-public interface NearbyBeaconView extends AuthView {
+public interface NearbyBeaconView {
 
     void showTitle(@StringRes int resId);
 

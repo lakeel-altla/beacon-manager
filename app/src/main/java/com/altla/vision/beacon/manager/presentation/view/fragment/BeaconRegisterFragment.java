@@ -332,9 +332,4 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
         FragmentController controller = new FragmentController(getFragmentManager());
         controller.showBeaconListFragment();
     }
-
-    @Override
-    public void refreshToken() {
-        ((MainActivity) getActivity()).refreshToken();
-    }
 }

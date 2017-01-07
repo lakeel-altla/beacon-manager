@@ -2,7 +2,7 @@ package com.altla.vision.beacon.manager.presentation.view;
 
 import android.support.annotation.StringRes;
 
-public interface SwitchProjectView extends AuthView {
+public interface SwitchProjectView {
 
     void showTitle(@StringRes int resId);
 

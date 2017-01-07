@@ -408,9 +408,4 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
     public void hideProgressDialog() {
         progressDialog.hide();
     }
-
-    @Override
-    public void refreshToken() {
-        ((MainActivity) getActivity()).refreshToken();
-    }
 }

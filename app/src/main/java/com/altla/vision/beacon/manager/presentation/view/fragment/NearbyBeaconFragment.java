@@ -162,9 +162,4 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
         FragmentController controller = new FragmentController(getFragmentManager());
         controller.showBeaconRegisterFragment(type, hexId, base64EncodedId);
     }
-
-    @Override
-    public void refreshToken() {
-        ((MainActivity) getActivity()).refreshToken();
-    }
 }
