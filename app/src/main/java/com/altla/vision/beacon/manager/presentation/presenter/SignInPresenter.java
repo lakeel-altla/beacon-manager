@@ -11,7 +11,6 @@ import com.altla.vision.beacon.manager.domain.usecase.FindNamespacesUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.SaveAccountNameUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.SaveProjectIdUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.SaveTokenUseCase;
-import com.altla.vision.beacon.manager.presentation.presenter.mapper.ProjectIdModelMapper;
 import com.altla.vision.beacon.manager.presentation.view.SignInView;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -49,7 +48,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
 
     private static final String AUTH_SCOPE = "oauth2:https://www.googleapis.com/auth/userlocation.beacon.registry";
 
-    private ProjectIdModelMapper projectIdModelMapper = new ProjectIdModelMapper();
+    private static final String NAMESPACE_PREFIX = "namespaces/";
 
     @Inject
     SignInPresenter() {
@@ -117,8 +116,11 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                     NamespaceEntity namespaceEntity = entity.namespaces.get(0);
                     return Single.just(namespaceEntity);
                 })
-                .map(entity -> projectIdModelMapper.map(entity))
-                .flatMap(projectIdModel -> Single.just(projectIdModel.projectId));
+                .flatMap(entity -> {
+                    String namespaceName = entity.namespaceName;
+                    String projectId = namespaceName.replace(NAMESPACE_PREFIX, "");
+                    return Single.just(projectId);
+                });
     }
 
     private Single<String> saveProjectId(String projectId) {
