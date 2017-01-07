@@ -1,6 +1,5 @@
 package com.altla.vision.beacon.manager.data.repository.retrofit;
 
-import com.altla.vision.beacon.manager.data.Header;
 import com.altla.vision.beacon.manager.data.HttpStatus;
 import com.altla.vision.beacon.manager.data.exception.ConflictException;
 import com.altla.vision.beacon.manager.data.exception.NotAuthorizedException;
@@ -14,6 +13,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public final class RetrofitInterceptor implements Interceptor {
+
+    private static final String AUTHORIZATION = "Authorization";
 
     private static final String PROJECT_ID = "projectId";
 
@@ -37,7 +38,7 @@ public final class RetrofitInterceptor implements Interceptor {
 
         Request request = originalRequest
                 .newBuilder()
-                .addHeader(Header.AUTHORIZATION.getValue(), BEARER + preferences.getToken())
+                .addHeader(AUTHORIZATION, BEARER + preferences.getToken())
                 .url(url)
                 .build();
 
