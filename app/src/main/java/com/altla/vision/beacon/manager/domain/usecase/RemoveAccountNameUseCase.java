@@ -13,7 +13,7 @@ public final class RemoveAccountNameUseCase {
     PreferenceRepository preferenceRepository;
 
     @Inject
-    public RemoveAccountNameUseCase() {
+    RemoveAccountNameUseCase() {
     }
 
     public Completable execute() {

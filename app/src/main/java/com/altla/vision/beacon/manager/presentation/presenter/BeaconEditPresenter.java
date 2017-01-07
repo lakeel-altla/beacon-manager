@@ -4,6 +4,7 @@ import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.domain.usecase.CreateAttachmentUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.FindAttachmentsUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.FindBeaconUseCase;
+import com.altla.vision.beacon.manager.domain.usecase.FindProjectIdUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.RemoveAttachmentUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.UpdateDescriptionUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.UpdateFloorLevelUseCase;
@@ -11,7 +12,7 @@ import com.altla.vision.beacon.manager.domain.usecase.UpdatePlaceUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.UpdatePropertiesUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.UpdatePropertyUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.UpdateStabilityUseCase;
-import com.altla.vision.beacon.manager.presentation.BeaconStatus;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconStatus;
 import com.altla.vision.beacon.manager.presentation.presenter.mapper.AttachmentModelMapper;
 import com.altla.vision.beacon.manager.presentation.presenter.mapper.BeaconModelMapper;
 import com.altla.vision.beacon.manager.presentation.presenter.model.AttachmentModel;
@@ -65,6 +66,9 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
 
     @Inject
     FindAttachmentsUseCase findAttachmentsUseCase;
+
+    @Inject
+    FindProjectIdUseCase findProjectIdUseCase;
 
     private BeaconModel beaconModel;
 
@@ -269,8 +273,9 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
     }
 
     public void onAttachmentInputted(String type, String data) {
-        Subscription subscription = createAttachmentUseCase
-                .execute(beaconModel.beaconName, type, data)
+        Subscription subscription = findProjectIdUseCase
+                .execute()
+                .flatMap(projectId -> createAttachmentUseCase.execute(beaconModel.beaconName, projectId, type, data))
                 .map(entity -> attachmentModelMapper.map(entity))
                 .doOnSubscribe(() -> getView().showProgressDialog())
                 .doOnUnsubscribe(() -> getView().hideProgressDialog())

@@ -13,7 +13,7 @@ public final class FindTokenUseCase {
     PreferenceRepository preferenceRepository;
 
     @Inject
-    public FindTokenUseCase() {
+    FindTokenUseCase() {
     }
 
     public Single<String> execute() {

@@ -18,7 +18,7 @@ public final class FindNamespacesUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public FindNamespacesUseCase() {
+    FindNamespacesUseCase() {
     }
 
     public Single<NamespacesEntity> execute() {

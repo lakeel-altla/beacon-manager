@@ -3,9 +3,9 @@ package com.altla.vision.beacon.manager.presentation.presenter.mapper;
 import com.altla.vision.beacon.manager.core.StringUtils;
 import com.altla.vision.beacon.manager.data.entity.BeaconEntity;
 import com.altla.vision.beacon.manager.data.entity.BeaconsEntity;
-import com.altla.vision.beacon.manager.presentation.BeaconName;
-import com.altla.vision.beacon.manager.presentation.BeaconPrefix;
-import com.altla.vision.beacon.manager.presentation.presenter.model.RegisteredBeaconModel;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconName;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconPrefix;
+import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconListModel;
 import com.altla.vision.beacon.manager.presentation.presenter.model.RegisteredBeaconsModel;
 
 import android.support.annotation.NonNull;
@@ -23,7 +23,7 @@ public final class RegisteredBeaconsMapper {
         if (entity.beacons != null) {
             beaconsModel.models = new ArrayList<>();
             for (BeaconEntity beacon : entity.beacons) {
-                RegisteredBeaconModel model = new RegisteredBeaconModel();
+                BeaconListModel model = new BeaconListModel();
 
                 BeaconName name = BeaconName.toBeaconName(beacon.advertisedId.type);
                 switch (name) {

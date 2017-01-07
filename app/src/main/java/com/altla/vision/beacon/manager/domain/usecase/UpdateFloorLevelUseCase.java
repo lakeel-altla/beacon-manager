@@ -14,7 +14,7 @@ public final class UpdateFloorLevelUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public UpdateFloorLevelUseCase() {
+    UpdateFloorLevelUseCase() {
     }
 
     public Single<BeaconEntity> execute(String beaconName, String floorLevel) {

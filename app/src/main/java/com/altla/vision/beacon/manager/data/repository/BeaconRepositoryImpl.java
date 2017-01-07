@@ -5,14 +5,12 @@ import com.altla.vision.beacon.manager.data.entity.BeaconAttachmentsEntity;
 import com.altla.vision.beacon.manager.data.entity.BeaconEntity;
 import com.altla.vision.beacon.manager.data.entity.BeaconsEntity;
 import com.altla.vision.beacon.manager.data.entity.NamespacesEntity;
-import com.altla.vision.beacon.manager.data.entity.PreferencesEntity;
-import com.altla.vision.beacon.manager.data.repository.retrofit.api.ProximityApi;
 import com.altla.vision.beacon.manager.data.entity.mapper.BeaconAttachmentMapper;
 import com.altla.vision.beacon.manager.data.entity.mapper.BeaconEntityMapper;
+import com.altla.vision.beacon.manager.data.repository.retrofit.api.ProximityApi;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import retrofit2.Retrofit;
 import rx.Single;
@@ -27,125 +25,66 @@ public class BeaconRepositoryImpl implements BeaconRepository {
     PreferenceRepository preferenceRepository;
 
     @Inject
-    public Retrofit retrofit;
+    Retrofit retrofit;
 
     @Inject
-    @Named("bearer")
-    public String bearer;
-
-    @Inject
-    public BeaconRepositoryImpl() {
+    BeaconRepositoryImpl() {
     }
 
     @Override
     public Single<BeaconsEntity> findBeaconsByPageToken(String pageToken) {
-        return getPreferencesData()
-                .flatMap(data -> findBeaconsByPageToken(data.token, data.projectId, pageToken));
+        return retrofit.create(ProximityApi.class).find(pageToken);
     }
 
     @Override
     public Single<NamespacesEntity> findNamespaces() {
-        return getPreferencesData()
-                .flatMap(data -> findNamespaces(data.token));
+        return retrofit.create(ProximityApi.class).findNamespaces();
     }
 
     @Override
     public Single<BeaconAttachmentsEntity> findAttachments(String beaconName) {
-        return getPreferencesData()
-                .flatMap(data -> retrofit.create(ProximityApi.class).findAttachments(bearer + data.token, beaconName));
+        return retrofit.create(ProximityApi.class).findAttachments(beaconName);
     }
 
     @Override
     public Single<BeaconEntity> registerBeacon(BeaconModel model) {
-        return getPreferencesData()
-                .flatMap(data -> registerBeacon(data.token, data.projectId, model));
+        BeaconEntity entity = beaconEntityMapper.map(model);
+        return retrofit.create(ProximityApi.class).registerBeacon(entity);
     }
 
     @Override
-    public Single<BeaconEntity> updateBeacon(BeaconEntity beaconEntity) {
-        return getPreferencesData()
-                .flatMap(data -> updateBeacon(data.token, data.projectId, beaconEntity));
+    public Single<BeaconEntity> updateBeacon(BeaconEntity entity) {
+        return retrofit.create(ProximityApi.class).updateBeacon(entity.beaconName, entity);
     }
 
     @Override
-    public Single<BeaconAttachmentEntity> createAttachment(String beaconName, String type, String value) {
-        return getPreferencesData().
-                flatMap(data -> createBeaconAttachment(data.token, data.projectId, beaconName, data.projectId + "/" + type, value));
+    public Single<BeaconAttachmentEntity> createAttachment(String beaconName, String projectId, String type, String value) {
+        BeaconAttachmentEntity entity = beaconAttachmentMapper.map(projectId, type, value);
+        return retrofit.create(ProximityApi.class).createAttachment(beaconName, entity);
     }
 
     @Override
     public Single<Object> removeAttachment(String attachmentName) {
-        return getPreferencesData()
-                .flatMap(data -> removeAttachment(data.token, data.projectId, attachmentName));
+        return retrofit.create(ProximityApi.class).removeAttachment(attachmentName);
     }
 
     @Override
     public Single<Object> activateBeacon(String beaconName) {
-        return getPreferencesData()
-                .flatMap(data -> activateBeacon(data.token, data.projectId, beaconName));
+        return retrofit.create(ProximityApi.class).activateBeacon(beaconName);
     }
 
     @Override
     public Single<Object> deactivateBeacon(String beaconName) {
-        return getPreferencesData()
-                .flatMap(data -> deactivateBeacon(data.token, data.projectId, beaconName));
+        return retrofit.create(ProximityApi.class).deactivateBeacon(beaconName);
     }
 
     @Override
     public Single<Object> decommissionBeacon(String beaconName) {
-        return getPreferencesData()
-                .flatMap(data -> decommissionBeacon(data.token, data.projectId, beaconName));
+        return retrofit.create(ProximityApi.class).deactivateBeacon(beaconName);
     }
 
     @Override
     public Single<BeaconEntity> findBeaconByName(String beaconName) {
-        return getPreferencesData()
-                .flatMap(data -> findBeaconByName(data.token, data.projectId, beaconName));
-    }
-
-    Single<PreferencesEntity> getPreferencesData() {
-        return preferenceRepository.findPreferencesData();
-    }
-
-    Single<BeaconsEntity> findBeaconsByPageToken(String token, String projectId, String pageToken) {
-        return retrofit.create(ProximityApi.class).find(bearer + token, projectId, pageToken);
-    }
-
-    Single<NamespacesEntity> findNamespaces(String token) {
-        return retrofit.create(ProximityApi.class).findNamespaces(bearer + token);
-    }
-
-    Single<BeaconEntity> findBeaconByName(String token, String projectId, String beaconName) {
-        return retrofit.create(ProximityApi.class).findBeacon(bearer + token, beaconName, projectId);
-    }
-
-    Single<BeaconEntity> registerBeacon(String token, String projectId, BeaconModel model) {
-        BeaconEntity entity = beaconEntityMapper.map(model);
-        return retrofit.create(ProximityApi.class).registerBeacon(bearer + token, projectId, entity);
-    }
-
-    Single<BeaconEntity> updateBeacon(String token, String projectId, BeaconEntity entity) {
-        return retrofit.create(ProximityApi.class).updateBeacon(bearer + token, entity.beaconName, projectId, entity);
-    }
-
-    Single<BeaconAttachmentEntity> createBeaconAttachment(String token, String projectId, String beaconName, String nameSpacedType, String value) {
-        BeaconAttachmentEntity entity = beaconAttachmentMapper.map(nameSpacedType, value);
-        return retrofit.create(ProximityApi.class).createAttachment(bearer + token, beaconName, projectId, entity);
-    }
-
-    Single<Object> removeAttachment(String token, String projectId, String attachmentName) {
-        return retrofit.create(ProximityApi.class).removeAttachment(bearer + token, attachmentName, projectId);
-    }
-
-    Single<Object> activateBeacon(String token, String projectId, String beaconName) {
-        return retrofit.create(ProximityApi.class).activateBeacon(bearer + token, beaconName, projectId);
-    }
-
-    Single<Object> deactivateBeacon(String token, String projectId, String beaconName) {
-        return retrofit.create(ProximityApi.class).deactivateBeacon(bearer + token, beaconName, projectId);
-    }
-
-    Single<Object> decommissionBeacon(String token, String projectId, String beaconName) {
-        return retrofit.create(ProximityApi.class).decommissionBeacon(bearer + token, beaconName, projectId);
+        return retrofit.create(ProximityApi.class).findBeacon(beaconName);
     }
 }

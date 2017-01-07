@@ -13,7 +13,7 @@ public final class RemoveAttachmentUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public RemoveAttachmentUseCase() {
+    RemoveAttachmentUseCase() {
     }
 
     public Single<Object> execute(String attachmentName) {

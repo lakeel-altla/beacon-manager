@@ -15,7 +15,7 @@ public final class RegisterBeaconUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public RegisterBeaconUseCase() {
+    RegisterBeaconUseCase() {
     }
 
     public Single<BeaconEntity> execute(BeaconModel model) {

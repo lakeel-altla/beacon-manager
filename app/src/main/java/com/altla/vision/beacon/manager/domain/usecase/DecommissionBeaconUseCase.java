@@ -13,7 +13,7 @@ public final class DecommissionBeaconUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public DecommissionBeaconUseCase() {
+    DecommissionBeaconUseCase() {
     }
 
     public Single<Object> execute(String name) {

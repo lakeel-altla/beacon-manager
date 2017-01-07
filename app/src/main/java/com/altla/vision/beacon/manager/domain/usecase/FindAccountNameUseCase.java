@@ -13,7 +13,7 @@ public final class FindAccountNameUseCase {
     PreferenceRepository preferenceRepository;
 
     @Inject
-    public FindAccountNameUseCase() {
+    FindAccountNameUseCase() {
     }
 
     public Single<String> execute() {

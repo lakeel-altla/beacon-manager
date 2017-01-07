@@ -1,6 +1,6 @@
 package com.altla.vision.beacon.manager.presentation.presenter.model;
 
-import com.altla.vision.beacon.manager.presentation.BeaconType;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconType;
 
 public final class NearbyBeaconModel {
 

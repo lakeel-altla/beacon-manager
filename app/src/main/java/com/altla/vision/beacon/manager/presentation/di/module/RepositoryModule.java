@@ -1,5 +1,8 @@
 package com.altla.vision.beacon.manager.presentation.di.module;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.altla.vision.beacon.manager.data.repository.BeaconRepository;
 import com.altla.vision.beacon.manager.data.repository.BeaconRepositoryImpl;
 import com.altla.vision.beacon.manager.data.repository.EncryptedPreferences;
@@ -8,8 +11,7 @@ import com.altla.vision.beacon.manager.data.repository.PreferenceRepositoryImpl;
 import com.altla.vision.beacon.manager.data.repository.retrofit.RetrofitInterceptor;
 import com.altla.vision.beacon.manager.presentation.di.ActivityScope;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
 
@@ -25,40 +27,42 @@ public class RepositoryModule {
 
     @ActivityScope
     @Provides
-    public SharedPreferences provideSharedPreferences(Context context) {
+    SharedPreferences provideSharedPreferences(Context context) {
         return context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
     }
 
     @ActivityScope
     @Provides
-    public PreferenceRepository providePreferenceRepository(PreferenceRepositoryImpl repository) {
+    PreferenceRepository providePreferenceRepository(PreferenceRepositoryImpl repository) {
         return repository;
     }
 
     @ActivityScope
     @Provides
-    public BeaconRepository provideBeaconRepository(BeaconRepositoryImpl repository) {
+    BeaconRepository provideBeaconRepository(BeaconRepositoryImpl repository) {
         return repository;
     }
 
     @ActivityScope
     @Provides
-    public EncryptedPreferences provideEncryptedPreferences(Context context) {
+    EncryptedPreferences provideEncryptedPreferences(Context context) {
         return new EncryptedPreferences(context);
     }
 
     @ActivityScope
     @Provides
-    public OkHttpClient provideOkHttpClient() {
+    OkHttpClient provideOkHttpClient(@Named("connectTimeout") long connectTimeout, @Named("readTimeout") long readTimeout, EncryptedPreferences preferences) {
         return new OkHttpClient()
                 .newBuilder()
-                .addInterceptor(new RetrofitInterceptor())
+                .connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
+                .readTimeout(readTimeout, TimeUnit.MILLISECONDS)
+                .addInterceptor(new RetrofitInterceptor(preferences))
                 .build();
     }
 
     @ActivityScope
     @Provides
-    public Retrofit provideRetrofit(@Named("proximityBaseUri") String baseUri, OkHttpClient okHttpClient) {
+    Retrofit provideRetrofit(@Named("proximityBeaconBaseUri") String baseUri, OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl(baseUri)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

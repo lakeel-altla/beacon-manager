@@ -9,14 +9,20 @@ import dagger.Provides;
 public class ConfigModule {
 
     @Provides
-    @Named("bearer")
-    public String provideBearer() {
-        return "Bearer ";
+    @Named("proximityBeaconBaseUri")
+    String provideProximityBeaconBaseUri() {
+        return "https://proximitybeacon.googleapis.com/v1beta1/";
     }
 
     @Provides
-    @Named("proximityBaseUri")
-    public String provideProximityBaseUri() {
-        return "https://proximitybeacon.googleapis.com/v1beta1/";
+    @Named("connectTimeout")
+    long provideConnectTimeout() {
+        return 10 * 1000;
+    }
+
+    @Provides
+    @Named("readTimeout")
+    long provideReadTimeout() {
+        return 10 * 1000;
     }
 }

@@ -17,7 +17,7 @@ public final class UpdatePlaceUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public UpdatePlaceUseCase() {
+    UpdatePlaceUseCase() {
     }
 
     public Single<BeaconEntity> execute(String beaconName, String placeId, LatLng latLng) {

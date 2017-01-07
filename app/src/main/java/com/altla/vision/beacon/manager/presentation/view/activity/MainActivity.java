@@ -2,13 +2,11 @@ package com.altla.vision.beacon.manager.presentation.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -19,18 +17,12 @@ import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
 import com.altla.vision.beacon.manager.R;
-import com.altla.vision.beacon.manager.presentation.BeaconStatus;
 import com.altla.vision.beacon.manager.presentation.application.App;
 import com.altla.vision.beacon.manager.presentation.di.component.UserComponent;
 import com.altla.vision.beacon.manager.presentation.di.module.ActivityModule;
 import com.altla.vision.beacon.manager.presentation.presenter.ActivityPresenter;
 import com.altla.vision.beacon.manager.presentation.view.ActivityView;
-import com.altla.vision.beacon.manager.presentation.view.fragment.BeaconEditFragment;
-import com.altla.vision.beacon.manager.presentation.view.fragment.BeaconRegisterFragment;
-import com.altla.vision.beacon.manager.presentation.view.fragment.BeaconRegisteredFragment;
-import com.altla.vision.beacon.manager.presentation.view.fragment.NearbyBeaconFragment;
-import com.altla.vision.beacon.manager.presentation.view.fragment.ProjectSwitchFragment;
-import com.altla.vision.beacon.manager.presentation.view.fragment.SignInFragment;
+import com.altla.vision.beacon.manager.presentation.view.FragmentController;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +122,7 @@ public class MainActivity extends AppCompatActivity
                 new FragmentController(getSupportFragmentManager()).showBeaconScanFragment();
                 break;
             case R.id.nav_registered:
-                new FragmentController(getSupportFragmentManager()).showBeaconRegisteredFragment();
+                new FragmentController(getSupportFragmentManager()).showBeaconListFragment();
                 break;
             case R.id.nav_switch_project:
                 new FragmentController(getSupportFragmentManager()).showProjectSwitchFragment();
@@ -191,84 +183,11 @@ public class MainActivity extends AppCompatActivity
         toggle.setDrawerIndicatorEnabled(enabled);
     }
 
-    public void showBeaconRegisterFragment(String type, String hexId, String base64EncodedId) {
-        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showBeaconRegisterFragment(type, hexId, base64EncodedId);
-    }
-
-    public void showBeaconRegisteredFragment() {
-        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showBeaconRegisteredFragment();
-    }
-
-    public void showBeaconEditFragment(String name, BeaconStatus beaconStatus) {
-        FragmentController fragmentController = new FragmentController(getSupportFragmentManager());
-        fragmentController.showBeaconEditFragment(name, beaconStatus);
-    }
-
     public void refreshToken() {
         activityPresenter.refreshToken(getApplicationContext());
     }
 
     public static UserComponent getUserComponent(@NonNull Fragment fragment) {
         return ((MainActivity) fragment.getActivity()).userComponent;
-    }
-
-    private static class FragmentController {
-
-        private static final String SIGN_IN_FRAGMENT_TAG = SignInFragment.class.getSimpleName();
-
-        private static final String BEACON_REGISTER_FRAGMENT_TAG = BeaconRegisterFragment.class.getSimpleName();
-
-        private static final String NEARBY_BEACON_FRAGMENT_TAG = NearbyBeaconFragment.class.getSimpleName();
-
-        private static final String BEACON_REGISTERED_FRAGMENT_TAG = BeaconRegisteredFragment.class.getSimpleName();
-
-        private static final String BEACON_EDIT_FRAGMENT_TAG = BeaconRegisteredFragment.class.getSimpleName();
-
-        private static final String PROJECT_SWITCH_FRAGMENT_TAG = ProjectSwitchFragment.class.getSimpleName();
-
-        private FragmentManager mFragmentManager;
-
-        FragmentController(FragmentManager fragmentManager) {
-            mFragmentManager = fragmentManager;
-        }
-
-        private void showSignInFragment() {
-            SignInFragment fragment = SignInFragment.newInstance();
-            replaceFragment(R.id.fragment_place_holder, fragment, SIGN_IN_FRAGMENT_TAG);
-        }
-
-        private void showBeaconScanFragment() {
-            NearbyBeaconFragment fragment = NearbyBeaconFragment.newInstance();
-            replaceFragment(R.id.fragment_place_holder, fragment, NEARBY_BEACON_FRAGMENT_TAG);
-        }
-
-        private void showBeaconRegisterFragment(String type, String hexId, String base64EncodedId) {
-            BeaconRegisterFragment fragment = BeaconRegisterFragment.newInstance(type, hexId, base64EncodedId);
-            replaceFragment(R.id.fragment_place_holder, fragment, BEACON_REGISTER_FRAGMENT_TAG);
-        }
-
-        private void showBeaconRegisteredFragment() {
-            BeaconRegisteredFragment fragment = BeaconRegisteredFragment.newInstance();
-            replaceFragment(R.id.fragment_place_holder, fragment, BEACON_REGISTERED_FRAGMENT_TAG);
-        }
-
-        private void showBeaconEditFragment(String name, BeaconStatus beaconStatus) {
-            BeaconEditFragment beaconEditFragment = BeaconEditFragment.newInstance(name, beaconStatus);
-            replaceFragment(R.id.fragment_place_holder, beaconEditFragment, BEACON_EDIT_FRAGMENT_TAG);
-        }
-
-        private void showProjectSwitchFragment() {
-            ProjectSwitchFragment fragment = ProjectSwitchFragment.newInstance();
-            replaceFragment(R.id.fragment_place_holder, fragment, PROJECT_SWITCH_FRAGMENT_TAG);
-        }
-
-        private void replaceFragment(@IdRes int containerViewId, Fragment fragment, String tag) {
-            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-            fragmentTransaction.addToBackStack(tag);
-            fragmentTransaction.replace(containerViewId, fragment, tag);
-            fragmentTransaction.commit();
-        }
     }
 }

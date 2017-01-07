@@ -13,7 +13,7 @@ public final class DeactivateBeaconUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public DeactivateBeaconUseCase() {
+    DeactivateBeaconUseCase() {
     }
 
     public Single<Object> execute(String beaconName) {

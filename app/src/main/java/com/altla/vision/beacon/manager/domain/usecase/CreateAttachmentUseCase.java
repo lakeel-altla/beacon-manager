@@ -1,7 +1,7 @@
 package com.altla.vision.beacon.manager.domain.usecase;
 
-import com.altla.vision.beacon.manager.data.repository.BeaconRepository;
 import com.altla.vision.beacon.manager.data.entity.BeaconAttachmentEntity;
+import com.altla.vision.beacon.manager.data.repository.BeaconRepository;
 
 import javax.inject.Inject;
 
@@ -14,10 +14,10 @@ public final class CreateAttachmentUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public CreateAttachmentUseCase() {
+    CreateAttachmentUseCase() {
     }
 
-    public Single<BeaconAttachmentEntity> execute(String beaconName, String type, String data) {
-        return beaconRepository.createAttachment(beaconName, type, data).subscribeOn(Schedulers.io());
+    public Single<BeaconAttachmentEntity> execute(String beaconName, String projectId, String type, String data) {
+        return beaconRepository.createAttachment(beaconName, projectId, type, data).subscribeOn(Schedulers.io());
     }
 }

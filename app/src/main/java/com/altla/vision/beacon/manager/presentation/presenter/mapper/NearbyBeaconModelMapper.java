@@ -2,7 +2,7 @@ package com.altla.vision.beacon.manager.presentation.presenter.mapper;
 
 import com.altla.vision.beacon.manager.core.ByteUtils;
 import com.altla.vision.beacon.manager.core.StringUtils;
-import com.altla.vision.beacon.manager.presentation.BeaconType;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconType;
 import com.altla.vision.beacon.manager.presentation.presenter.model.NearbyBeaconModel;
 
 import org.altbeacon.beacon.Beacon;

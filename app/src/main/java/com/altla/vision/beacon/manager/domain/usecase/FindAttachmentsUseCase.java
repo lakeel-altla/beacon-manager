@@ -14,7 +14,7 @@ public final class FindAttachmentsUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public FindAttachmentsUseCase() {
+    FindAttachmentsUseCase() {
     }
 
     public Single<BeaconAttachmentsEntity> execute(String beaconName) {

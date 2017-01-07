@@ -14,7 +14,7 @@ public final class UpdateDescriptionUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public UpdateDescriptionUseCase() {
+    UpdateDescriptionUseCase() {
     }
 
     public Single<BeaconEntity> execute(String beaconName, String description) {

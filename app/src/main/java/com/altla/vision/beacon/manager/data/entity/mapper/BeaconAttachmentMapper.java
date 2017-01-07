@@ -5,9 +5,9 @@ import com.altla.vision.beacon.manager.data.entity.BeaconAttachmentEntity;
 
 public final class BeaconAttachmentMapper {
 
-    public BeaconAttachmentEntity map(String nameSpacedType, String value) {
+    public BeaconAttachmentEntity map(String projectId, String type, String value) {
         BeaconAttachmentEntity entity = new BeaconAttachmentEntity();
-        entity.namespacedType = nameSpacedType;
+        entity.namespacedType = projectId + "/" + type;
         entity.data = StringUtils.toBase64Encoded(value.getBytes());
         return entity;
     }

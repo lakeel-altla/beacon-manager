@@ -16,7 +16,7 @@ public final class UpdatePropertyUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public UpdatePropertyUseCase() {
+    UpdatePropertyUseCase() {
     }
 
     public Single<BeaconEntity> execute(String beaconName, String name, String value) {

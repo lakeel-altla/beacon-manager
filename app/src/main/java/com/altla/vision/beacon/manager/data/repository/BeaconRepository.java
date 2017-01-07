@@ -23,7 +23,7 @@ public interface BeaconRepository {
 
     Single<BeaconEntity> updateBeacon(BeaconEntity beaconEntity);
 
-    Single<BeaconAttachmentEntity> createAttachment(String beaconName, String type, String value);
+    Single<BeaconAttachmentEntity> createAttachment(String beaconName, String projectId, String type, String value);
 
     Single<Object> removeAttachment(String attachmentName);
 

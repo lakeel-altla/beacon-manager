@@ -13,7 +13,7 @@ public final class SaveProjectIdUseCase {
     PreferenceRepository preferenceRepository;
 
     @Inject
-    public SaveProjectIdUseCase() {
+    SaveProjectIdUseCase() {
     }
 
     public Single<String> execute(String projectId) {

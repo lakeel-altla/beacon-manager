@@ -12,12 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.altla.vision.beacon.manager.R;
-import com.altla.vision.beacon.manager.presentation.BeaconStatus;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconStatus;
 import com.altla.vision.beacon.manager.presentation.presenter.BeaconRegisteredPresenter;
-import com.altla.vision.beacon.manager.presentation.presenter.model.RegisteredBeaconModel;
-import com.altla.vision.beacon.manager.presentation.view.RegisteredBeaconView;
+import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconListModel;
+import com.altla.vision.beacon.manager.presentation.view.BeaconListView;
+import com.altla.vision.beacon.manager.presentation.view.FragmentController;
 import com.altla.vision.beacon.manager.presentation.view.activity.MainActivity;
-import com.altla.vision.beacon.manager.presentation.view.adapter.BeaconRegisteredAdapter;
+import com.altla.vision.beacon.manager.presentation.view.adapter.BeaconListAdapter;
 import com.altla.vision.beacon.manager.presentation.view.divider.DividerItemDecoration;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.marshalchen.ultimaterecyclerview.swipe.SwipeItemManagerInterface;
@@ -29,7 +30,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class BeaconRegisteredFragment extends Fragment implements RegisteredBeaconView {
+public final class BeaconListFragment extends Fragment implements BeaconListView {
 
     @Inject
     BeaconRegisteredPresenter beaconRegisteredPresenter;
@@ -40,8 +41,8 @@ public final class BeaconRegisteredFragment extends Fragment implements Register
     @BindView(R.id.recycler_view)
     UltimateRecyclerView ultimateRecyclerView;
 
-    public static BeaconRegisteredFragment newInstance() {
-        return new BeaconRegisteredFragment();
+    public static BeaconListFragment newInstance() {
+        return new BeaconListFragment();
     }
 
     @Override
@@ -89,7 +90,7 @@ public final class BeaconRegisteredFragment extends Fragment implements Register
             }
         });
 
-        BeaconRegisteredAdapter adapter = new BeaconRegisteredAdapter(beaconRegisteredPresenter);
+        BeaconListAdapter adapter = new BeaconListAdapter(beaconRegisteredPresenter);
         adapter.setMode(SwipeItemManagerInterface.Mode.Single);
 
         ultimateRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
@@ -123,12 +124,13 @@ public final class BeaconRegisteredFragment extends Fragment implements Register
 
     @Override
     public void showBeaconEditFragment(String name, BeaconStatus beaconStatus) {
-        ((MainActivity) getActivity()).showBeaconEditFragment(name, beaconStatus);
+        FragmentController controller = new FragmentController(getFragmentManager());
+        controller.showBeaconEditFragment(name, beaconStatus);
     }
 
     @Override
-    public void updateItems(List<RegisteredBeaconModel> models) {
-        BeaconRegisteredAdapter adapter = ((BeaconRegisteredAdapter) ultimateRecyclerView.getAdapter());
+    public void updateItems(List<BeaconListModel> models) {
+        BeaconListAdapter adapter = ((BeaconListAdapter) ultimateRecyclerView.getAdapter());
         adapter.removeAll();
         adapter.insert(models);
     }

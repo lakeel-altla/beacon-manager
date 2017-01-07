@@ -13,7 +13,7 @@ public final class SaveTokenUseCase {
     PreferenceRepository preferenceRepository;
 
     @Inject
-    public SaveTokenUseCase() {
+    SaveTokenUseCase() {
     }
 
     public Single<String> execute(String token) {

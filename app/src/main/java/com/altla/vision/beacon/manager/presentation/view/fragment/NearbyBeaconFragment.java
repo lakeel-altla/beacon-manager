@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.presentation.presenter.NearbyBeaconPresenter;
+import com.altla.vision.beacon.manager.presentation.view.FragmentController;
 import com.altla.vision.beacon.manager.presentation.view.NearbyBeaconView;
 import com.altla.vision.beacon.manager.presentation.view.activity.MainActivity;
 import com.altla.vision.beacon.manager.presentation.view.adapter.NearbyBeaconAdapter;
@@ -158,7 +159,8 @@ public final class NearbyBeaconFragment extends Fragment implements NearbyBeacon
 
     @Override
     public void showBeaconRegisterFragment(String type, String hexId, String base64EncodedId) {
-        ((MainActivity) getActivity()).showBeaconRegisterFragment(type, hexId, base64EncodedId);
+        FragmentController controller = new FragmentController(getFragmentManager());
+        controller.showBeaconRegisterFragment(type, hexId, base64EncodedId);
     }
 
     @Override

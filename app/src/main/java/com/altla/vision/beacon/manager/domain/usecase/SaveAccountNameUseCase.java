@@ -13,7 +13,7 @@ public final class SaveAccountNameUseCase {
     PreferenceRepository preferenceRepository;
 
     @Inject
-    public SaveAccountNameUseCase() {
+    SaveAccountNameUseCase() {
     }
 
     public Single<String> execute(String accountName) {

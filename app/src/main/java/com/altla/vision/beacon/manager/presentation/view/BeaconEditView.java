@@ -2,7 +2,7 @@ package com.altla.vision.beacon.manager.presentation.view;
 
 import com.google.android.gms.location.places.ui.PlacePicker;
 
-import com.altla.vision.beacon.manager.presentation.BeaconStatus;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconStatus;
 import com.altla.vision.beacon.manager.presentation.presenter.model.AttachmentModel;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
 

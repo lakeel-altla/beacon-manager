@@ -7,11 +7,11 @@ import com.altla.vision.beacon.manager.domain.usecase.ActivateBeaconUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.DeactivateBeaconUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.DecommissionBeaconUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.FindBeaconsUseCase;
-import com.altla.vision.beacon.manager.presentation.BeaconStatus;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconStatus;
 import com.altla.vision.beacon.manager.presentation.presenter.mapper.RegisteredBeaconsMapper;
-import com.altla.vision.beacon.manager.presentation.presenter.model.RegisteredBeaconModel;
-import com.altla.vision.beacon.manager.presentation.view.BeaconRegisteredItemView;
-import com.altla.vision.beacon.manager.presentation.view.RegisteredBeaconView;
+import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconListModel;
+import com.altla.vision.beacon.manager.presentation.view.BeaconListItemView;
+import com.altla.vision.beacon.manager.presentation.view.BeaconListView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public final class BeaconRegisteredPresenter extends BasePresenter<RegisteredBeaconView> implements AuthFailure {
+public final class BeaconRegisteredPresenter extends BasePresenter<BeaconListView> implements AuthFailure {
 
     @Inject
     FindBeaconsUseCase findBeaconsUseCase;
@@ -47,7 +47,7 @@ public final class BeaconRegisteredPresenter extends BasePresenter<RegisteredBea
 
     private boolean isNextBeaconsFetching;
 
-    private final List<RegisteredBeaconModel> registeredBeaconModels = new ArrayList<>();
+    private final List<BeaconListModel> beaconListModels = new ArrayList<>();
 
     private RegisteredBeaconsMapper mapper = new RegisteredBeaconsMapper();
 
@@ -77,7 +77,7 @@ public final class BeaconRegisteredPresenter extends BasePresenter<RegisteredBea
 
         isNextBeaconsFetching = true;
 
-        if (totalCount <= registeredBeaconModels.size()) {
+        if (totalCount <= beaconListModels.size()) {
             isNextBeaconsFetching = false;
             return;
         }
@@ -91,10 +91,10 @@ public final class BeaconRegisteredPresenter extends BasePresenter<RegisteredBea
                     totalCount = Integer.parseInt(model.totalCount);
                     nextPageToken = model.nextPageToken;
 
-                    registeredBeaconModels.addAll(model.models);
+                    beaconListModels.addAll(model.models);
                     sort();
 
-                    getView().updateItems(registeredBeaconModels);
+                    getView().updateItems(beaconListModels);
                 }, new DefaultAuthFailCallback(this) {
 
                     @Override
@@ -119,11 +119,11 @@ public final class BeaconRegisteredPresenter extends BasePresenter<RegisteredBea
                     totalCount = Integer.parseInt(model.totalCount);
                     nextPageToken = model.nextPageToken;
 
-                    registeredBeaconModels.clear();
-                    registeredBeaconModels.addAll(model.models);
+                    beaconListModels.clear();
+                    beaconListModels.addAll(model.models);
                     sort();
 
-                    getView().updateItems(registeredBeaconModels);
+                    getView().updateItems(beaconListModels);
                 }, new DefaultAuthFailCallback(this) {
 
                     @Override
@@ -135,30 +135,30 @@ public final class BeaconRegisteredPresenter extends BasePresenter<RegisteredBea
         mCompositeSubscription.add(subscription);
     }
 
-    public void onCreateItemView(BeaconRegisteredItemView itemView) {
-        BeaconRegisteredItemPresenter beaconRegisteredItemPresenter = new BeaconRegisteredItemPresenter();
-        beaconRegisteredItemPresenter.onCreateItemView(itemView);
-        itemView.setItemPresenter(beaconRegisteredItemPresenter);
+    public void onCreateItemView(BeaconListItemView itemView) {
+        BeaconListIemPresenter beaconListIemPresenter = new BeaconListIemPresenter();
+        beaconListIemPresenter.onCreateItemView(itemView);
+        itemView.setItemPresenter(beaconListIemPresenter);
     }
 
-    public final class BeaconRegisteredItemPresenter extends BaseItemPresenter<BeaconRegisteredItemView> {
+    public final class BeaconListIemPresenter extends BaseItemPresenter<BeaconListItemView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().updateItem(registeredBeaconModels.get(position));
+            getItemView().updateItem(beaconListModels.get(position));
         }
 
         public void onClick(String name, String status) {
             getView().showBeaconEditFragment(name, BeaconStatus.toStatus(status));
         }
 
-        public void onActivateButtonClicked(RegisteredBeaconModel model) {
+        public void onActivateButtonClicked(BeaconListModel model) {
             Subscription subscription = activateBeaconUseCase
                     .execute(model.name)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(o -> {
                         model.status = BeaconStatus.ACTIVE.name();
-                        getView().updateItems(registeredBeaconModels);
+                        getView().updateItems(beaconListModels);
                     }, e -> {
                         LOGGER.error("Failed to deactivate beacon", e);
                         getView().showSnackBar(R.string.error_update);
@@ -166,13 +166,13 @@ public final class BeaconRegisteredPresenter extends BasePresenter<RegisteredBea
             mCompositeSubscription.add(subscription);
         }
 
-        public void onDeactivateButtonClicked(RegisteredBeaconModel model) {
+        public void onDeactivateButtonClicked(BeaconListModel model) {
             Subscription subscription = deactivateBeaconUseCase
                     .execute(model.name)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(o -> {
                         model.status = BeaconStatus.INACTIVE.name();
-                        getView().updateItems(registeredBeaconModels);
+                        getView().updateItems(beaconListModels);
                     }, e -> {
                         LOGGER.error("Failed to deactivate beacon", e);
                         getView().showSnackBar(R.string.error_update);
@@ -180,13 +180,13 @@ public final class BeaconRegisteredPresenter extends BasePresenter<RegisteredBea
             mCompositeSubscription.add(subscription);
         }
 
-        public void onDecommissionButtonClicked(RegisteredBeaconModel model) {
+        public void onDecommissionButtonClicked(BeaconListModel model) {
             Subscription subscription = decommissionBeaconUseCase
                     .execute(model.name)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(o -> {
                         model.status = BeaconStatus.DECOMMISSIONED.name();
-                        getView().updateItems(registeredBeaconModels);
+                        getView().updateItems(beaconListModels);
                     }, e -> {
                         LOGGER.error("Failed to decommission beacon", e);
                         getView().showSnackBar(R.string.error_update);
@@ -197,6 +197,6 @@ public final class BeaconRegisteredPresenter extends BasePresenter<RegisteredBea
 
     private void sort() {
         // Sort by beacon id.
-        Collections.sort(registeredBeaconModels, (model1, model2) -> model1.hexId.compareTo(model2.hexId));
+        Collections.sort(beaconListModels, (model1, model2) -> model1.hexId.compareTo(model2.hexId));
     }
 }

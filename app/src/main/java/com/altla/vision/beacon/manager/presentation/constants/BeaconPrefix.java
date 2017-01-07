@@ -1,4 +1,4 @@
-package com.altla.vision.beacon.manager.presentation;
+package com.altla.vision.beacon.manager.presentation.constants;
 
 public enum BeaconPrefix {
 

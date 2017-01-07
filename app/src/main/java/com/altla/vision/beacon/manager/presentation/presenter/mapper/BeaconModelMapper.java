@@ -1,8 +1,8 @@
 package com.altla.vision.beacon.manager.presentation.presenter.mapper;
 
-import com.altla.vision.beacon.manager.presentation.BeaconName;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconName;
 import com.altla.vision.beacon.manager.data.entity.BeaconEntity;
-import com.altla.vision.beacon.manager.presentation.BeaconPrefix;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconPrefix;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
 
 import android.support.annotation.NonNull;

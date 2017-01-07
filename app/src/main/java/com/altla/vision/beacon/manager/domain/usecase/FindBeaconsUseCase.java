@@ -14,7 +14,7 @@ public final class FindBeaconsUseCase {
     BeaconRepository beaconRepository;
 
     @Inject
-    public FindBeaconsUseCase() {
+    FindBeaconsUseCase() {
     }
 
     public Single<BeaconsEntity> execute(String pageToken) {

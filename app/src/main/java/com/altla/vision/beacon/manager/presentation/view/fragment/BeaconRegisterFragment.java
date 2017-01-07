@@ -22,10 +22,11 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.altla.vision.beacon.manager.R;
-import com.altla.vision.beacon.manager.presentation.BundleKey;
+import com.altla.vision.beacon.manager.presentation.constants.BundleKey;
 import com.altla.vision.beacon.manager.presentation.presenter.BeaconRegisterPresenter;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
 import com.altla.vision.beacon.manager.presentation.view.BeaconRegisterView;
+import com.altla.vision.beacon.manager.presentation.view.FragmentController;
 import com.altla.vision.beacon.manager.presentation.view.activity.MainActivity;
 import com.altla.vision.beacon.manager.presentation.view.layout.DescriptionLayout;
 import com.altla.vision.beacon.manager.presentation.view.layout.FloorLevelLayout;
@@ -328,7 +329,8 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
 
     @Override
     public void showBeaconRegisteredFragment() {
-        ((MainActivity) getActivity()).showBeaconRegisteredFragment();
+        FragmentController controller = new FragmentController(getFragmentManager());
+        controller.showBeaconListFragment();
     }
 
     @Override

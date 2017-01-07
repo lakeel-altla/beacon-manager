@@ -7,10 +7,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.altla.vision.beacon.manager.R;
-import com.altla.vision.beacon.manager.presentation.BeaconStatus;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconStatus;
 import com.altla.vision.beacon.manager.presentation.presenter.BeaconRegisteredPresenter;
-import com.altla.vision.beacon.manager.presentation.presenter.model.RegisteredBeaconModel;
-import com.altla.vision.beacon.manager.presentation.view.BeaconRegisteredItemView;
+import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconListModel;
+import com.altla.vision.beacon.manager.presentation.view.BeaconListItemView;
 import com.marshalchen.ultimaterecyclerview.SwipeableUltimateViewAdapter;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerviewViewHolder;
 import com.marshalchen.ultimaterecyclerview.swipe.SwipeLayout;
@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class BeaconRegisteredAdapter extends SwipeableUltimateViewAdapter<RegisteredBeaconModel> {
+public final class BeaconListAdapter extends SwipeableUltimateViewAdapter<BeaconListModel> {
 
     private BeaconRegisteredPresenter beaconRegisteredPresenter;
 
-    public BeaconRegisteredAdapter(BeaconRegisteredPresenter presenter) {
+    public BeaconListAdapter(BeaconRegisteredPresenter presenter) {
         super(new ArrayList<>());
         beaconRegisteredPresenter = presenter;
     }
@@ -36,18 +36,18 @@ public final class BeaconRegisteredAdapter extends SwipeableUltimateViewAdapter<
 
     @Override
     protected UltimateRecyclerviewViewHolder newViewHolder(View view) {
-        RegisteredBeaconViewHolder registeredBeaconViewHolder = new RegisteredBeaconViewHolder(view, true);
-        beaconRegisteredPresenter.onCreateItemView(registeredBeaconViewHolder);
-        return registeredBeaconViewHolder;
+        BeaconListViewHolder beaconListViewHolder = new BeaconListViewHolder(view, true);
+        beaconRegisteredPresenter.onCreateItemView(beaconListViewHolder);
+        return beaconListViewHolder;
     }
 
     @Override
-    protected void withBindHolder(UltimateRecyclerviewViewHolder bindHolder, RegisteredBeaconModel model, int position) {
-        RegisteredBeaconViewHolder holder = (RegisteredBeaconViewHolder) bindHolder;
+    protected void withBindHolder(UltimateRecyclerviewViewHolder bindHolder, BeaconListModel model, int position) {
+        BeaconListViewHolder holder = (BeaconListViewHolder) bindHolder;
         holder.onBind(position);
     }
 
-    final class RegisteredBeaconViewHolder extends UltimateRecyclerviewViewHolder implements BeaconRegisteredItemView {
+    final class BeaconListViewHolder extends UltimateRecyclerviewViewHolder implements BeaconListItemView {
 
         @BindView(R.id.layout_row)
         LinearLayout rowLayout;
@@ -73,9 +73,9 @@ public final class BeaconRegisteredAdapter extends SwipeableUltimateViewAdapter<
         @BindView(R.id.button_decommission)
         Button decommissionButton;
 
-        private BeaconRegisteredPresenter.BeaconRegisteredItemPresenter itemPresenter;
+        private BeaconRegisteredPresenter.BeaconListIemPresenter itemPresenter;
 
-        public RegisteredBeaconViewHolder(View itemView, boolean bind) {
+        public BeaconListViewHolder(View itemView, boolean bind) {
             super(itemView);
             if (bind) {
                 ButterKnife.bind(this, itemView);
@@ -90,12 +90,12 @@ public final class BeaconRegisteredAdapter extends SwipeableUltimateViewAdapter<
         }
 
         @Override
-        public void setItemPresenter(BeaconRegisteredPresenter.BeaconRegisteredItemPresenter beaconRegisteredItemPresenter) {
-            itemPresenter = beaconRegisteredItemPresenter;
+        public void setItemPresenter(BeaconRegisteredPresenter.BeaconListIemPresenter beaconListIemPresenter) {
+            itemPresenter = beaconListIemPresenter;
         }
 
         @Override
-        public void updateItem(RegisteredBeaconModel model) {
+        public void updateItem(BeaconListModel model) {
             id.setText(model.hexId);
             type.setText(model.type);
             description.setText(model.description);

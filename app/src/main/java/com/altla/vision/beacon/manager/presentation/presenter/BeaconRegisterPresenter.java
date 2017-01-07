@@ -5,7 +5,7 @@ import com.altla.vision.beacon.manager.data.exception.ConflictException;
 import com.altla.vision.beacon.manager.domain.usecase.CreateAttachmentUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.RegisterBeaconUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.RemoveAttachmentUseCase;
-import com.altla.vision.beacon.manager.presentation.BeaconStatus;
+import com.altla.vision.beacon.manager.presentation.constants.BeaconStatus;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
 import com.altla.vision.beacon.manager.presentation.view.BeaconRegisterView;
 import com.google.android.gms.location.places.Place;

@@ -1,6 +1,6 @@
 package com.altla.vision.beacon.manager.presentation.presenter.model;
 
-public final class RegisteredBeaconModel {
+public final class BeaconListModel {
 
     public String hexId;
 
