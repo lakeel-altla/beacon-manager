@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.presentation.presenter.ProjectSwitchPresenter;
-import com.altla.vision.beacon.manager.presentation.view.SwitchProjectView;
+import com.altla.vision.beacon.manager.presentation.view.ProjectSwitchView;
 import com.altla.vision.beacon.manager.presentation.view.activity.MainActivity;
 import com.altla.vision.beacon.manager.presentation.view.adapter.ProjectSwitchAdapter;
 
@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class ProjectSwitchFragment extends Fragment implements SwitchProjectView {
+public final class ProjectFragmentSwitch extends Fragment implements ProjectSwitchView {
 
     @Inject
     ProjectSwitchPresenter projectSwitchPresenter;
@@ -36,8 +36,8 @@ public final class ProjectSwitchFragment extends Fragment implements SwitchProje
     @BindView(R.id.textView_current_project)
     TextView textView;
 
-    public static ProjectSwitchFragment newInstance() {
-        return new ProjectSwitchFragment();
+    public static ProjectFragmentSwitch newInstance() {
+        return new ProjectFragmentSwitch();
     }
 
     @Override

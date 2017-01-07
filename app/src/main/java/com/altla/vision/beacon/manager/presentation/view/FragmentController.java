@@ -11,7 +11,7 @@ import com.altla.vision.beacon.manager.presentation.view.fragment.BeaconEditFrag
 import com.altla.vision.beacon.manager.presentation.view.fragment.BeaconListFragment;
 import com.altla.vision.beacon.manager.presentation.view.fragment.BeaconRegisterFragment;
 import com.altla.vision.beacon.manager.presentation.view.fragment.NearbyBeaconFragment;
-import com.altla.vision.beacon.manager.presentation.view.fragment.ProjectSwitchFragment;
+import com.altla.vision.beacon.manager.presentation.view.fragment.ProjectFragmentSwitch;
 import com.altla.vision.beacon.manager.presentation.view.fragment.SignInFragment;
 
 public final class FragmentController {
@@ -26,7 +26,7 @@ public final class FragmentController {
 
     private static final String BEACON_EDIT_FRAGMENT_TAG = BeaconListFragment.class.getSimpleName();
 
-    private static final String PROJECT_SWITCH_FRAGMENT_TAG = ProjectSwitchFragment.class.getSimpleName();
+    private static final String PROJECT_SWITCH_FRAGMENT_TAG = ProjectFragmentSwitch.class.getSimpleName();
 
     private FragmentManager mFragmentManager;
 
@@ -60,7 +60,7 @@ public final class FragmentController {
     }
 
     public void showProjectSwitchFragment() {
-        ProjectSwitchFragment fragment = ProjectSwitchFragment.newInstance();
+        ProjectFragmentSwitch fragment = ProjectFragmentSwitch.newInstance();
         replaceFragment(R.id.fragment_place_holder, fragment, PROJECT_SWITCH_FRAGMENT_TAG);
     }
 

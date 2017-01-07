@@ -9,7 +9,7 @@ import com.altla.vision.beacon.manager.domain.usecase.SaveProjectIdUseCase;
 import com.altla.vision.beacon.manager.presentation.presenter.mapper.NameSpaceModelMapper;
 import com.altla.vision.beacon.manager.presentation.presenter.model.NameSpaceModel;
 import com.altla.vision.beacon.manager.presentation.view.ProjectSwitchItemView;
-import com.altla.vision.beacon.manager.presentation.view.SwitchProjectView;
+import com.altla.vision.beacon.manager.presentation.view.ProjectSwitchView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectView> {
+public final class ProjectSwitchPresenter extends BasePresenter<ProjectSwitchView> {
 
     @Inject
     FindProjectIdUseCase findProjectIdUseCase;

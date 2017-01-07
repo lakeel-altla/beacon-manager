@@ -11,7 +11,7 @@ import com.altla.vision.beacon.manager.presentation.view.fragment.BeaconEditFrag
 import com.altla.vision.beacon.manager.presentation.view.fragment.BeaconListFragment;
 import com.altla.vision.beacon.manager.presentation.view.fragment.BeaconRegisterFragment;
 import com.altla.vision.beacon.manager.presentation.view.fragment.NearbyBeaconFragment;
-import com.altla.vision.beacon.manager.presentation.view.fragment.ProjectSwitchFragment;
+import com.altla.vision.beacon.manager.presentation.view.fragment.ProjectFragmentSwitch;
 import com.altla.vision.beacon.manager.presentation.view.fragment.SignInFragment;
 
 import dagger.Subcomponent;
@@ -32,5 +32,5 @@ public interface UserComponent {
 
     void inject(BeaconRegisterFragment fragment);
 
-    void inject(ProjectSwitchFragment fragment);
+    void inject(ProjectFragmentSwitch fragment);
 }
