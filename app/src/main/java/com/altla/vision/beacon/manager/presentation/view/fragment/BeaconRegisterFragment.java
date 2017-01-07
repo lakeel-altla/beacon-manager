@@ -157,7 +157,7 @@ public final class BeaconRegisterFragment extends Fragment implements BeaconRegi
 
         });
 
-        View view = inflater.inflate(R.layout.fragment_beacon_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_beacon_edit, container, false);
 
         ButterKnife.bind(this, view);
         ButterKnife.bind(typeLayout, view.findViewById(R.id.type));

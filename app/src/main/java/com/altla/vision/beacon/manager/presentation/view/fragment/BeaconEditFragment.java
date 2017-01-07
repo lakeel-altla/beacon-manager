@@ -176,7 +176,7 @@ public class BeaconEditFragment extends Fragment implements BeaconEditView {
                     .show();
         });
 
-        View view = inflater.inflate(R.layout.fragment_beacon_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_beacon_edit, container, false);
         ButterKnife.bind(this, view);
         ButterKnife.bind(typeLayout, view.findViewById(R.id.type));
         ButterKnife.bind(idLayout, view.findViewById(R.id.id));
