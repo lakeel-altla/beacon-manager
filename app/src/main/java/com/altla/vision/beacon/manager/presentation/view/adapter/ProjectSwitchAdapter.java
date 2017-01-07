@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.presentation.presenter.ProjectSwitchPresenter;
-import com.altla.vision.beacon.manager.presentation.presenter.model.NameSpaceModel;
+import com.altla.vision.beacon.manager.presentation.presenter.model.ProjectIdModel;
 import com.altla.vision.beacon.manager.presentation.view.ProjectSwitchItemView;
 
 import butterknife.BindView;
@@ -63,7 +63,7 @@ public final class ProjectSwitchAdapter extends RecyclerView.Adapter<ProjectSwit
         }
 
         @Override
-        public void showItem(NameSpaceModel model) {
+        public void showItem(ProjectIdModel model) {
             projectId.setText(model.projectId);
             linearLayout.setOnClickListener(view -> mItemPresenter.onItemClick(model));
         }

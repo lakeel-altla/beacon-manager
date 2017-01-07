@@ -6,8 +6,8 @@ import com.altla.vision.beacon.manager.R;
 import com.altla.vision.beacon.manager.domain.usecase.FindNamespacesUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.FindProjectIdUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.SaveProjectIdUseCase;
-import com.altla.vision.beacon.manager.presentation.presenter.mapper.NameSpaceModelMapper;
-import com.altla.vision.beacon.manager.presentation.presenter.model.NameSpaceModel;
+import com.altla.vision.beacon.manager.presentation.presenter.mapper.ProjectIdModelMapper;
+import com.altla.vision.beacon.manager.presentation.presenter.model.ProjectIdModel;
 import com.altla.vision.beacon.manager.presentation.view.ProjectSwitchItemView;
 import com.altla.vision.beacon.manager.presentation.view.ProjectSwitchView;
 
@@ -36,9 +36,9 @@ public final class ProjectSwitchPresenter extends BasePresenter<ProjectSwitchVie
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectSwitchItemPresenter.class);
 
-    private List<NameSpaceModel> nameSpaceModels = new ArrayList<>();
+    private List<ProjectIdModel> projectIdModels = new ArrayList<>();
 
-    private final NameSpaceModelMapper nameSpaceModelMapper = new NameSpaceModelMapper();
+    private final ProjectIdModelMapper projectIdModelMapper = new ProjectIdModelMapper();
 
     @Inject
     public ProjectSwitchPresenter() {
@@ -62,12 +62,12 @@ public final class ProjectSwitchPresenter extends BasePresenter<ProjectSwitchVie
         Subscription subscription1 = findNamespacesUseCase
                 .execute()
                 .flatMapObservable(namespacesEntity -> Observable.from(namespacesEntity.namespaces))
-                .map(nameSpaceModelMapper::map)
+                .map(projectIdModelMapper::map)
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(nameSpaceModels -> {
-                    this.nameSpaceModels.clear();
-                    this.nameSpaceModels.addAll(nameSpaceModels);
+                    this.projectIdModels.clear();
+                    this.projectIdModels.addAll(nameSpaceModels);
                     getView().updateItems();
                 }, e -> {
                     LOGGER.error("Failed to find namespaces", e);
@@ -83,17 +83,17 @@ public final class ProjectSwitchPresenter extends BasePresenter<ProjectSwitchVie
     }
 
     public int getItemCount() {
-        return nameSpaceModels.size();
+        return projectIdModels.size();
     }
 
     public final class ProjectSwitchItemPresenter extends BaseItemPresenter<ProjectSwitchItemView> {
 
         @Override
         public void onBind(@IntRange(from = 0) int position) {
-            getItemView().showItem(nameSpaceModels.get(position));
+            getItemView().showItem(projectIdModels.get(position));
         }
 
-        public void onItemClick(NameSpaceModel model) {
+        public void onItemClick(ProjectIdModel model) {
             Subscription subscription = saveProjectIdUseCase
                     .execute(model.projectId)
                     .observeOn(AndroidSchedulers.mainThread())

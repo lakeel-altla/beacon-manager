@@ -6,8 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.altla.vision.beacon.manager.R;
+import com.altla.vision.beacon.manager.data.entity.NamespaceEntity;
+import com.altla.vision.beacon.manager.domain.usecase.FindNamespacesUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.SaveAccountNameUseCase;
+import com.altla.vision.beacon.manager.domain.usecase.SaveProjectIdUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.SaveTokenUseCase;
+import com.altla.vision.beacon.manager.presentation.presenter.mapper.ProjectIdModelMapper;
 import com.altla.vision.beacon.manager.presentation.view.SignInView;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -29,10 +33,6 @@ import rx.schedulers.Schedulers;
 
 public final class SignInPresenter extends BasePresenter<SignInView> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SignInPresenter.class);
-
-    private static final String AUTH_SCOPE = "oauth2:https://www.googleapis.com/auth/userlocation.beacon.registry";
-
     @Inject
     SaveAccountNameUseCase saveAccountNameUseCase;
 
@@ -40,7 +40,19 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
     SaveTokenUseCase saveTokenUseCase;
 
     @Inject
-    public SignInPresenter() {
+    FindNamespacesUseCase findNamespacesUseCase;
+
+    @Inject
+    SaveProjectIdUseCase saveProjectIdUseCase;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SignInPresenter.class);
+
+    private static final String AUTH_SCOPE = "oauth2:https://www.googleapis.com/auth/userlocation.beacon.registry";
+
+    private ProjectIdModelMapper projectIdModelMapper = new ProjectIdModelMapper();
+
+    @Inject
+    SignInPresenter() {
     }
 
     @Override
@@ -52,6 +64,8 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
         Subscription subscription = authenticate(activity.getApplicationContext(), accountName)
                 .flatMap(this::saveToken)
                 .flatMap(s -> saveAccountName(accountName))
+                .flatMap(s -> findProjectId())
+                .flatMap(this::saveProjectId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> getView().showNearbyBeaconFragment(),
@@ -73,7 +87,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
         subscriptions.add(subscription);
     }
 
-    Single<String> authenticate(Context context, String accountName) {
+    private Single<String> authenticate(Context context, String accountName) {
         return Single.create(new Single.OnSubscribe<String>() {
 
             @Override
@@ -89,11 +103,25 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
         });
     }
 
-    Single<String> saveAccountName(String accountName) {
+    private Single<String> saveAccountName(String accountName) {
         return saveAccountNameUseCase.execute(accountName).subscribeOn(Schedulers.io());
     }
 
-    Single<String> saveToken(String token) {
+    private Single<String> saveToken(String token) {
         return saveTokenUseCase.execute(token).subscribeOn(Schedulers.io());
+    }
+
+    private Single<String> findProjectId() {
+        return findNamespacesUseCase.execute().subscribeOn(Schedulers.io())
+                .flatMap(entity -> {
+                    NamespaceEntity namespaceEntity = entity.namespaces.get(0);
+                    return Single.just(namespaceEntity);
+                })
+                .map(entity -> projectIdModelMapper.map(entity))
+                .flatMap(projectIdModel -> Single.just(projectIdModel.projectId));
+    }
+
+    private Single<String> saveProjectId(String projectId) {
+        return saveProjectIdUseCase.execute(projectId).subscribeOn(Schedulers.io());
     }
 }
