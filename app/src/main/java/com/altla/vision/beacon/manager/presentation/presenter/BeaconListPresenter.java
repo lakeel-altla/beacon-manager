@@ -55,7 +55,6 @@ public final class BeaconListPresenter extends BasePresenter<BeaconListView> {
     BeaconListPresenter() {
     }
 
-    @Override
     public void onResume() {
         getView().showTitle(R.string.title_registered);
         findLatestBeacons();

@@ -84,7 +84,6 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> {
     BeaconEditPresenter() {
     }
 
-    @Override
     public void onResume() {
         getView().showTitle(R.string.title_beacon_edit);
     }

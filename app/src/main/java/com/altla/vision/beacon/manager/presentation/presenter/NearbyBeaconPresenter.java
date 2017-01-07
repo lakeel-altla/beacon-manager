@@ -52,17 +52,17 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
         this.context = context;
     }
 
-    @Override
     public void onResume() {
         getView().showTitle(R.string.title_beacon_scan);
     }
 
     @Override
     public void onStop() {
+        super.onStop();
+
         if (beaconManager != null) {
             beaconManager.unbind(this);
         }
-        subscriptions.unsubscribe();
 
         isScanning = false;
     }
@@ -178,7 +178,7 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
     public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
         return context.bindService(intent, serviceConnection, i);
     }
-    
+
     public final class NearbyBeaconItemPresenter extends BaseItemPresenter<NearbyBeaconItemView> {
 
         @Override

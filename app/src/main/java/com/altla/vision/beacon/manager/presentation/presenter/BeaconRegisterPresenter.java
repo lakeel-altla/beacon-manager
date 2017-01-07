@@ -41,7 +41,6 @@ public final class BeaconRegisterPresenter extends BasePresenter<BeaconRegisterV
     BeaconRegisterPresenter() {
     }
 
-    @Override
     public void onResume() {
         getView().showTitle(R.string.title_beacon_register);
         getView().updateItem(beaconModel);

@@ -1,25 +1,26 @@
 package com.altla.vision.beacon.manager.presentation.presenter;
 
-import rx.subscriptions.CompositeSubscription;
+import android.support.annotation.CallSuper;
+
+import com.altla.vision.beacon.manager.rx.ReusableCompositeSubscription;
 
 public class BasePresenter<V> {
 
+    ReusableCompositeSubscription subscriptions = new ReusableCompositeSubscription();
+
     private V v;
 
-    CompositeSubscription subscriptions = new CompositeSubscription();
+    protected V getView() {
+        return v;
+    }
 
+    @CallSuper
     public void onCreateView(V v) {
         this.v = v;
     }
 
-    public void onResume() {
-    }
-
+    @CallSuper
     public void onStop() {
-        subscriptions.unsubscribe();
-    }
-
-    protected V getView() {
-        return v;
+        subscriptions.unSubscribe();
     }
 }

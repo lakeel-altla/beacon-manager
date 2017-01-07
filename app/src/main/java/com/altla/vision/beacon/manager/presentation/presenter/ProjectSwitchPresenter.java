@@ -41,10 +41,9 @@ public final class ProjectSwitchPresenter extends BasePresenter<ProjectSwitchVie
     private final ProjectIdModelMapper projectIdModelMapper = new ProjectIdModelMapper();
 
     @Inject
-    public ProjectSwitchPresenter() {
+    ProjectSwitchPresenter() {
     }
 
-    @Override
     public void onResume() {
         getView().showTitle(R.string.title_switch_project);
 
