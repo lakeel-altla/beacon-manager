@@ -60,7 +60,7 @@ public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectVie
                                 getView().showSnackBar(R.string.error_find_current_project_id);
                             }
                         });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
 
         Subscription subscription1 = findNamespacesUseCase
                 .execute()
@@ -80,7 +80,7 @@ public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectVie
                         getView().showSnackBar(R.string.error_find);
                     }
                 });
-        mCompositeSubscription.add(subscription1);
+        subscriptions.add(subscription1);
     }
 
     public void onCreateItemView(ProjectSwitchItemView projectSwitchItemView) {
@@ -116,7 +116,7 @@ public final class ProjectSwitchPresenter extends BasePresenter<SwitchProjectVie
                                     LOGGER.error("Failed to switch project", e);
                                 }
                             });
-            mCompositeSubscription.add(subscription);
+            subscriptions.add(subscription);
         }
     }
 }

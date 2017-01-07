@@ -105,7 +105,7 @@ public final class BeaconRegisteredPresenter extends BasePresenter<BeaconListVie
                         getView().showSnackBar(R.string.error_find);
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     private void findLatestBeacons() {
@@ -132,7 +132,7 @@ public final class BeaconRegisteredPresenter extends BasePresenter<BeaconListVie
                         getView().showSnackBar(R.string.error_find);
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onCreateItemView(BeaconListItemView itemView) {
@@ -163,7 +163,7 @@ public final class BeaconRegisteredPresenter extends BasePresenter<BeaconListVie
                         LOGGER.error("Failed to deactivate beacon", e);
                         getView().showSnackBar(R.string.error_update);
                     });
-            mCompositeSubscription.add(subscription);
+            subscriptions.add(subscription);
         }
 
         public void onDeactivateButtonClicked(BeaconListModel model) {
@@ -177,7 +177,7 @@ public final class BeaconRegisteredPresenter extends BasePresenter<BeaconListVie
                         LOGGER.error("Failed to deactivate beacon", e);
                         getView().showSnackBar(R.string.error_update);
                     });
-            mCompositeSubscription.add(subscription);
+            subscriptions.add(subscription);
         }
 
         public void onDecommissionButtonClicked(BeaconListModel model) {
@@ -191,7 +191,7 @@ public final class BeaconRegisteredPresenter extends BasePresenter<BeaconListVie
                         LOGGER.error("Failed to decommission beacon", e);
                         getView().showSnackBar(R.string.error_update);
                     });
-            mCompositeSubscription.add(subscription);
+            subscriptions.add(subscription);
         }
     }
 

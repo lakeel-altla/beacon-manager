@@ -76,7 +76,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                     LOGGER.error("Failed to save new token", e);
                     getView().showSnackBar(R.string.error_process);
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void refreshToken(Context context) {
@@ -97,7 +97,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                                 getView().showSnackBar(R.string.error_process);
                             }
                         });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onSignOut(Context context) {
@@ -111,7 +111,7 @@ public final class ActivityPresenter extends BasePresenter<ActivityView> {
                             LOGGER.error("Failed to sign out", e);
                             getView().showSnackBar(R.string.error_sign_out);
                         });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     Single<String> clearToken(Context context, String token) {

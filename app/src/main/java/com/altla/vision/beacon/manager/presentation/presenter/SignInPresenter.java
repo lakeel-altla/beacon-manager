@@ -70,7 +70,7 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                                 getView().showSnackBar(R.string.error_sign_in);
                             }
                         });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     Single<String> authenticate(Context context, String accountName) {

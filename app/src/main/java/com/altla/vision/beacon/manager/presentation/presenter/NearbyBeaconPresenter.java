@@ -62,7 +62,7 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
         if (beaconManager != null) {
             beaconManager.unbind(this);
         }
-        mCompositeSubscription.unsubscribe();
+        subscriptions.unsubscribe();
 
         isScanning = false;
     }
@@ -151,7 +151,7 @@ public final class NearbyBeaconPresenter extends BasePresenter<NearbyBeaconView>
                             LOGGER.error("Failed to scan beacons", e);
                             getView().showSnackBar(R.string.error_scan_beacons);
                         });
-                mCompositeSubscription.add(subscription);
+                subscriptions.add(subscription);
             }
         });
 

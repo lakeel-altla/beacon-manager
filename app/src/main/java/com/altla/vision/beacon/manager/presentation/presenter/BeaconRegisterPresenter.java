@@ -121,7 +121,7 @@ public final class BeaconRegisterPresenter extends BasePresenter<BeaconRegisterV
                         }
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     @Override

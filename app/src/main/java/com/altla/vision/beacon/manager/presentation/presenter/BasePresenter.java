@@ -6,7 +6,7 @@ public class BasePresenter<V> {
 
     private V v;
 
-    CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    CompositeSubscription subscriptions = new CompositeSubscription();
 
     public void onCreateView(V v) {
         this.v = v;
@@ -16,7 +16,7 @@ public class BasePresenter<V> {
     }
 
     public void onStop() {
-        mCompositeSubscription.unsubscribe();
+        subscriptions.unsubscribe();
     }
 
     protected V getView() {

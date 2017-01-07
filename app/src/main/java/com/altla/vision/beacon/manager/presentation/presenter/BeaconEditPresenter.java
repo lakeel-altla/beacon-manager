@@ -111,7 +111,7 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                         getView().showSnackBar(R.string.error_process);
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
 
         Subscription subscription1 = findAttachmentsUseCase
                 .execute(beaconModel.beaconName)
@@ -133,7 +133,7 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                         getView().showSnackBar(R.string.error_process);
                     }
                 });
-        mCompositeSubscription.add(subscription1);
+        subscriptions.add(subscription1);
     }
 
     public void onDescriptionInputted(String value) {
@@ -154,7 +154,7 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                         getView().showSnackBar(R.string.error_update);
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onFloorLevelInputted(String value) {
@@ -175,7 +175,7 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                         getView().showSnackBar(R.string.error_update);
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onStabilityInputted(String value) {
@@ -196,7 +196,7 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                         getView().showSnackBar(R.string.error_update);
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onPlaceIdClicked() {
@@ -225,7 +225,7 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                         getView().showSnackBar(R.string.error_update);
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onPropertyInputted(String name, String value) {
@@ -246,7 +246,7 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                         getView().showSnackBar(R.string.error_update);
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onPropertyRemoved(String key) {
@@ -269,7 +269,7 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                         getView().showSnackBar(R.string.error_remove);
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onAttachmentInputted(String type, String data) {
@@ -291,7 +291,7 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                         getView().showSnackBar(R.string.error_add);
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     public void onAttachmentRemoved(AttachmentModel model) {
@@ -311,7 +311,7 @@ public final class BeaconEditPresenter extends BasePresenter<BeaconEditView> imp
                         getView().showSnackBar(R.string.error_remove);
                     }
                 });
-        mCompositeSubscription.add(subscription);
+        subscriptions.add(subscription);
     }
 
     @Override
