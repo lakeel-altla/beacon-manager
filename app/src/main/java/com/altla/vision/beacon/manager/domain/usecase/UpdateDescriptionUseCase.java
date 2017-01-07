@@ -1,6 +1,6 @@
 package com.altla.vision.beacon.manager.domain.usecase;
 
-import com.altla.vision.beacon.manager.data.repository.BeaconRepository;
+import com.altla.vision.beacon.manager.domain.repository.BeaconRepository;
 import com.altla.vision.beacon.manager.data.entity.BeaconEntity;
 
 import javax.inject.Inject;

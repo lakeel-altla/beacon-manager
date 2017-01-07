@@ -3,10 +3,10 @@ package com.altla.vision.beacon.manager.presentation.di.module;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.altla.vision.beacon.manager.data.repository.BeaconRepository;
+import com.altla.vision.beacon.manager.domain.repository.BeaconRepository;
 import com.altla.vision.beacon.manager.data.repository.BeaconRepositoryImpl;
 import com.altla.vision.beacon.manager.data.repository.EncryptedPreferences;
-import com.altla.vision.beacon.manager.data.repository.PreferenceRepository;
+import com.altla.vision.beacon.manager.domain.repository.PreferenceRepository;
 import com.altla.vision.beacon.manager.data.repository.PreferenceRepositoryImpl;
 import com.altla.vision.beacon.manager.data.repository.retrofit.RetrofitInterceptor;
 import com.altla.vision.beacon.manager.presentation.di.ActivityScope;

@@ -1,4 +1,4 @@
-package com.altla.vision.beacon.manager.data.repository;
+package com.altla.vision.beacon.manager.domain.repository;
 
 import com.altla.vision.beacon.manager.data.entity.BeaconAttachmentEntity;
 import com.altla.vision.beacon.manager.data.entity.BeaconAttachmentsEntity;

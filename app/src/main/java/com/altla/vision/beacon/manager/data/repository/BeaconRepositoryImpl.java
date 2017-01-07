@@ -8,6 +8,8 @@ import com.altla.vision.beacon.manager.data.entity.NamespacesEntity;
 import com.altla.vision.beacon.manager.data.entity.mapper.BeaconAttachmentMapper;
 import com.altla.vision.beacon.manager.data.entity.mapper.BeaconEntityMapper;
 import com.altla.vision.beacon.manager.data.repository.retrofit.api.ProximityApi;
+import com.altla.vision.beacon.manager.domain.repository.BeaconRepository;
+import com.altla.vision.beacon.manager.domain.repository.PreferenceRepository;
 import com.altla.vision.beacon.manager.presentation.presenter.model.BeaconModel;
 
 import javax.inject.Inject;

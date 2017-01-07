@@ -1,5 +1,7 @@
 package com.altla.vision.beacon.manager.data.repository;
 
+import com.altla.vision.beacon.manager.domain.repository.PreferenceRepository;
+
 import javax.inject.Inject;
 
 import rx.Completable;

@@ -1,11 +1,10 @@
 package com.altla.vision.beacon.manager.domain.usecase;
 
-import com.altla.vision.beacon.manager.data.repository.PreferenceRepository;
+import com.altla.vision.beacon.manager.domain.repository.PreferenceRepository;
 
 import javax.inject.Inject;
 
 import rx.Completable;
-import rx.Single;
 
 public final class RemoveAccountNameUseCase {
 

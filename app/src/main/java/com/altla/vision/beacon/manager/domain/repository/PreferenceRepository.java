@@ -1,4 +1,4 @@
-package com.altla.vision.beacon.manager.data.repository;
+package com.altla.vision.beacon.manager.domain.repository;
 
 import rx.Completable;
 import rx.Single;
