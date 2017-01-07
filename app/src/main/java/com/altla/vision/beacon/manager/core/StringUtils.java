@@ -12,11 +12,7 @@ public final class StringUtils {
     }
 
     public static boolean isEmpty(String str) {
-        if (str == null || str.length() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return str == null || str.length() == 0;
     }
 
     public static String toHex(byte[] bytes) {
