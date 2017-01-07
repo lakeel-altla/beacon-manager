@@ -11,6 +11,7 @@ import com.altla.vision.beacon.manager.domain.usecase.FindNamespacesUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.SaveAccountNameUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.SaveProjectIdUseCase;
 import com.altla.vision.beacon.manager.domain.usecase.SaveTokenUseCase;
+import com.altla.vision.beacon.manager.presentation.GoogleProject;
 import com.altla.vision.beacon.manager.presentation.view.SignInView;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -118,8 +119,8 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
                 })
                 .flatMap(entity -> {
                     String namespaceName = entity.namespaceName;
-                    String projectId = namespaceName.replace(NAMESPACE_PREFIX, "");
-                    return Single.just(projectId);
+                    GoogleProject project = new GoogleProject(namespaceName);
+                    return Single.just(project.getId());
                 });
     }
 
