@@ -49,8 +49,6 @@ public final class SignInPresenter extends BasePresenter<SignInView> {
 
     private static final String AUTH_SCOPE = "oauth2:https://www.googleapis.com/auth/userlocation.beacon.registry";
 
-    private static final String NAMESPACE_PREFIX = "namespaces/";
-
     @Inject
     SignInPresenter() {
     }
